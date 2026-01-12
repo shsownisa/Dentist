@@ -150,11 +150,21 @@
         @keyframes slideIn { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
         
         .c-1 { color: #6366f1; } .c-2 { color: #f59e0b; } .c-3 { color: #10b981; } .c-4 { color: #0ea5e9; }
+        
+        /* أزرار الملفات الجديدة */
+        .file-btn {
+            width: 35px; height: 35px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--glass); border: 1px solid var(--glass-border);
+            cursor: pointer; transition: 0.2s; color: white;
+        }
+        .file-btn:active { transform: scale(0.9); }
+        .view-btn { color: var(--accent); }
+        .download-btn { color: var(--success); }
     </style>
 </head>
 <body>
 
-    <!-- مودال الحذف بستايل جذاب -->
     <div id="deleteModal" class="modal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); display: none; justify-content: center; align-items: center; z-index: 5000;">
         <div class="modal-cont" style="background: #0f172a; border: 1px solid var(--danger); padding: 30px; border-radius: 30px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 0 30px rgba(255, 71, 87, 0.2);">
             <div class="logo-placeholder" style="margin: 0 auto 15px; background: var(--danger);"><i class="fas fa-trash-alt"></i></div>
@@ -192,7 +202,7 @@
             </div>
             <div class="uni-info">
                 <h1>جامعة العلوم العراقية</h1>
-                <span>الدليل الشامل لطب الاسنان </span>
+                <span>GROUP H - ACADEMIC PRO</span>
             </div>
         </div>
         <div class="header-actions">
@@ -467,6 +477,14 @@
             `).join('');
         };
 
+        // دالة التنزيل عبر كروم بنظام الأندرويد
+        window.openInChrome = (url) => {
+            const chromeIntent = "intent://" + url.replace(/^https?:\/\//, "") + "#Intent;scheme=https;package=com.android.chrome;end";
+            window.location.href = chromeIntent;
+            // في حال فشل الـ Intent، يتم الفتح بشكل عادي
+            setTimeout(() => { if(document.hasFocus()) window.open(url, '_blank'); }, 500);
+        };
+
         window.openFolder = async (folderId) => {
             const snap = await getDoc(PATHS.lectures);
             const folders = snap.data()?.folders || [];
@@ -480,12 +498,19 @@
                 list.innerHTML = "<p style='text-align:center; opacity:0.5; margin-top:30px;'>لا توجد ملفات داخل هذا المجلد</p>";
             } else {
                 list.innerHTML = folder.files.map(f => `
-                    <div class="announce-item" style="display:flex; justify-content:space-between; align-items:center" onclick="window.open('${f.link}', '_blank')">
+                    <div class="announce-item" style="display:flex; justify-content:space-between; align-items:center">
                         <div style="display:flex; align-items:center; gap:10px">
                             <i class="fas fa-file-pdf" style="color:#ff4757; font-size:1.5rem"></i>
                             <span>${f.title}</span>
                         </div>
-                        <i class="fas fa-external-link-alt" style="opacity:0.3"></i>
+                        <div style="display:flex; gap:8px">
+                            <div class="file-btn view-btn" onclick="window.open('${f.link}', '_blank')">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="file-btn download-btn" onclick="openInChrome('${f.link}')">
+                                <i class="fas fa-download"></i>
+                            </div>
+                        </div>
                     </div>
                 `).join('');
             }
@@ -802,4 +827,3 @@
     </script>
 </body>
 </html>
-
