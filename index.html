@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Molar</title>
+    <title>جامعة العلوم العراقية - النسخة الاحترافية</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
@@ -74,7 +74,7 @@
             border-right: 4px solid var(--accent);
             padding: 15px; border-radius: 16px; margin-bottom: 15px;
             backdrop-filter: blur(5px); border: 1px solid var(--glass-border);
-            animation: slideIn 0.5s ease-out;
+            animation: slideIn 0.4s ease-out;
         }
 
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
@@ -94,7 +94,6 @@
             background: var(--glass-heavy); border: 1px solid var(--glass-border);
         }
 
-        /* المجلدات على شكل مربعات */
         .folder-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -143,15 +142,14 @@
             width: 100%; font-weight: 800; cursor: pointer; box-shadow: var(--glow);
         }
 
-        .view { display: none; animation: fadeIn 0.4s ease; }
-        .active-view { display: block; }
+        .view { display: none; }
+        .active-view { display: block; animation: fadeIn 0.3s ease; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
         
         .c-1 { color: #6366f1; } .c-2 { color: #f59e0b; } .c-3 { color: #10b981; } .c-4 { color: #0ea5e9; }
         
-        /* أزرار الملفات الجديدة */
         .file-btn {
             width: 35px; height: 35px; border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
@@ -197,9 +195,7 @@
 
     <header>
         <div class="header-brand">
-            <div class="logo-placeholder">
-                <i class="fas fa-university"></i>
-            </div>
+            <div class="logo-placeholder"><i class="fas fa-university"></i></div>
             <div class="uni-info">
                 <h1> Molar</h1>
                 <span>الدليل الشامل في طب الاسنان </span>
@@ -214,17 +210,12 @@
     </header>
 
     <div class="container">
-        
         <div id="main-view" class="view active-view">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <h3 style="margin:0"><i class="fas fa-bullhorn" style="color:var(--accent)"></i> آخر التبليغات</h3>
                 <span style="font-size: 0.7rem; opacity: 0.6;" id="current-date"></span>
             </div>
-            
-            <div id="ann-list">
-                <div class="skeleton"></div>
-                <div class="skeleton"></div>
-            </div>
+            <div id="ann-list"></div>
             
             <h3 style="margin-top:30px; margin-bottom: 15px;">الأقسام الذكية</h3>
             <div class="grid">
@@ -289,7 +280,7 @@
         </div>
 
         <div id="students-view" class="view">
-            <input type="text" id="nameSearch" placeholder="ابحث عن اسم زميل..." onkeyup="loadStudentsForView()" style="border-radius:50px; background: var(--glass);">
+            <input type="text" id="nameSearch" placeholder="ابحث عن اسم زميل..." onkeyup="renderStudentsView()" style="border-radius:50px; background: var(--glass);">
             <div id="names-list"></div>
         </div>
 
@@ -391,16 +382,31 @@
             results: doc(db, "results", "global_results")
         };
 
+        // الذاكرة المؤقتة (Cache) لسرعة خرافية
+        let DATA_CACHE = {
+            announces: [],
+            students: [],
+            exams: [],
+            lectures: [],
+            results: []
+        };
+
         let currentDraftQuestions = [];
         let activeExamData = null;
         let verifiedStudent = null;
 
         document.getElementById('current-date').innerText = new Date().toLocaleDateString('ar-EG', { weekday: 'long', month: 'long', day: 'numeric' });
 
-        const showSkeleton = (id) => {
-            const el = document.getElementById(id);
-            if(el) el.innerHTML = '<div class="skeleton"></div>'.repeat(3);
-        };
+        // التحديث اللحظي (OnSnapshot) - هو السر وراء السرعة
+        function initRealtimeSync() {
+            onSnapshot(PATHS.announces, (s) => { DATA_CACHE.announces = s.data()?.list || []; renderAnnounces(); });
+            onSnapshot(PATHS.lectures, (s) => { DATA_CACHE.lectures = s.data()?.folders || []; renderFolders(); if(document.getElementById('admin-view').classList.contains('active-view')) loadManager(); });
+            onSnapshot(PATHS.students, (s) => { DATA_CACHE.students = s.data()?.list || []; if(document.getElementById('students-view').classList.contains('active-view')) renderStudentsView(); });
+            onSnapshot(PATHS.exams, (s) => { DATA_CACHE.exams = s.data()?.list || []; renderExams(); });
+            onSnapshot(PATHS.results, (s) => { DATA_CACHE.results = s.data()?.list || []; });
+        }
+
+        initRealtimeSync();
 
         window.changeView = (vName, el) => {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view'));
@@ -411,11 +417,82 @@
                 document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
                 el.classList.add('active');
             }
-            if(vName === 'lectures') loadFolders();
+
+            // التحميل الآن من الكاش بدلاً من الانتظار
+            if(vName === 'lectures') renderFolders();
             if(vName === 'admin') loadManager();
-            if(vName === 'exams-list') loadStudentExams();
-            if(vName === 'students') loadStudentsForView();
+            if(vName === 'exams-list') renderExams();
+            if(vName === 'students') renderStudentsView();
+            if(vName === 'student-manager-section') renderStudentsManager();
+            
             window.scrollTo({top: 0, behavior: 'smooth'});
+        };
+
+        // Render Functions (تعرض البيانات فوراً من الكاش)
+        function renderAnnounces() {
+            const list = document.getElementById('ann-list');
+            list.innerHTML = DATA_CACHE.announces.slice(-5).reverse().map(a => `
+                <div class="announce-item"><i class="fas fa-info-circle" style="color:var(--accent); margin-left:8px"></i>${a.text}</div>
+            `).join('');
+        }
+
+        function renderFolders() {
+            const cont = document.getElementById('folders-container');
+            if(DATA_CACHE.lectures.length === 0) {
+                cont.innerHTML = "<p style='text-align:center; opacity:0.5; grid-column:span 2'>المكتبة فارغة</p>";
+                return;
+            }
+            cont.innerHTML = DATA_CACHE.lectures.map(f => `
+                <div class="folder-card" onclick="openFolder('${f.id}')">
+                    <i class="fas fa-folder"></i>
+                    <span class="folder-name">${f.name}</span>
+                    <span class="file-count">${f.files.length} ملفات</span>
+                </div>
+            `).join('');
+        }
+
+        function renderExams() {
+            const cont = document.getElementById('student-exams-container');
+            cont.innerHTML = DATA_CACHE.exams.map(e => `
+                <div class="box">
+                    <h4 style="margin:0">${e.subject}</h4>
+                    <p style="font-size:0.8rem; opacity:0.6">يتكون من ${e.questions.length} أسئلة</p>
+                    <button class="btn" onclick="initiateExam('${e.id}', '${e.subject}')">بدء الاختبار</button>
+                </div>
+            `).join('');
+        }
+
+        window.renderStudentsView = () => {
+            const term = document.getElementById('nameSearch').value.toLowerCase();
+            const cont = document.getElementById('names-list');
+            const filtered = DATA_CACHE.students.filter(s => s.name.toLowerCase().includes(term));
+            cont.innerHTML = filtered.map((s, i) => `
+                <div class="announce-item" style="display:flex; justify-content:space-between">
+                    <span>${s.name}</span>
+                    <span style="opacity:0.4; font-size:0.8rem">#${i+1}</span>
+                </div>
+            `).join('');
+        };
+
+        // Logic Functions
+        window.openFolder = (folderId) => {
+            const folder = DATA_CACHE.lectures.find(f => f.id === folderId);
+            if(!folder) return;
+            document.getElementById('current-folder-title').innerText = folder.name;
+            const list = document.getElementById('files-list');
+            list.innerHTML = folder.files.length === 0 ? "<p style='text-align:center; opacity:0.5; margin-top:30px;'>فارغ</p>" :
+                folder.files.map(f => `
+                <div class="announce-item" style="display:flex; justify-content:space-between; align-items:center">
+                    <div style="display:flex; align-items:center; gap:10px">
+                        <i class="fas fa-file-pdf" style="color:#ff4757; font-size:1.5rem"></i>
+                        <span>${f.title}</span>
+                    </div>
+                    <div style="display:flex; gap:8px">
+                        <div class="file-btn view-btn" onclick="openInGDrive('${f.link}')"><i class="fas fa-eye"></i></div>
+                        <div class="file-btn download-btn" onclick="openInChrome('${f.link}')"><i class="fas fa-download"></i></div>
+                    </div>
+                </div>`).join('');
+            changeView('folder-content');
         };
 
         window.verifyAdmin = () => {
@@ -431,223 +508,115 @@
                 closeModal('loginModal'); changeView('admin');
             } else if(pass === "vipabnzadinc2003") {
                 document.getElementById('student-manager-section').style.display = 'block';
-                loadStudentsManager();
+                renderStudentsManager();
                 closeModal('loginModal'); changeView('admin');
-            } else { 
-                showCustomAlert("رمز الدخول غير صحيح", true); 
-            }
+            } else { showCustomAlert("رمز الدخول غير صحيح", true); }
         };
 
-        function showCustomAlert(msg, isError = false) {
-            document.getElementById('alertMsg').innerText = msg;
-            document.getElementById('alertIcon').style.background = isError ? 'var(--danger)' : 'var(--success)';
-            openModal('alertModal');
+        window.loadManager = () => {
+            const cont = document.getElementById('admin-control');
+            let html = `<p style="color:var(--accent)">إدارة التبليغات:</p>`;
+            DATA_CACHE.announces.forEach(a => { html += `<div class="announce-item" style="display:flex; justify-content:space-between"><span>${a.text}</span><i class="fas fa-trash" style="color:var(--danger); cursor:pointer" onclick='delArrayItem("announces", ${JSON.stringify(a)})'></i></div>`; });
+            
+            const select = document.getElementById('selectFolder');
+            select.innerHTML = '<option value="">اختر المجلد...</option>' + DATA_CACHE.lectures.map(f => `<option value="${f.id}">${f.name}</option>`).join('');
+
+            html += `<p style="color:var(--accent); margin-top:20px">إدارة الملفات:</p>`;
+            DATA_CACHE.lectures.forEach(f => {
+                html += `<div class="box" style="border: 1px solid rgba(245, 158, 11, 0.3)">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+                        <strong style="color:#f59e0b"><i class="fas fa-folder"></i> ${f.name}</strong>
+                        <i class="fas fa-trash-alt" style="color:var(--danger); cursor:pointer" onclick='delFolder("${f.id}")'></i>
+                    </div>
+                    ${f.files.map(file => `<div class="announce-item" style="padding:8px 12px; margin-bottom:5px; font-size:0.85rem; display:flex; justify-content:space-between"><span>${file.title}</span><i class="fas fa-times" style="color:var(--danger); cursor:pointer" onclick='delFileFromFolder("${f.id}", "${file.id}")'></i></div>`).join('')}
+                </div>`;
+            });
+            cont.innerHTML = html;
+
+            const exCont = document.getElementById('manage-exams-list');
+            exCont.innerHTML = `<p style="color:var(--accent); margin-top:20px">إدارة الامتحانات:</p>` + DATA_CACHE.exams.map(e => `<div class="announce-item" style="display:flex; justify-content:space-between"><span>${e.subject}</span><div><button onclick="viewResults('${e.id}')" style="background:var(--primary); color:white; border:none; padding:4px 10px; border-radius:8px; margin-left:10px">النتائج</button><i class="fas fa-trash" style="color:var(--danger); cursor:pointer" onclick='delArrayItem("exams", ${JSON.stringify(e)})'></i></div></div>`).join('');
+        };
+
+        function renderStudentsManager() {
+            const cont = document.getElementById('registered-students-list');
+            cont.innerHTML = DATA_CACHE.students.map(s => `
+                <div class="announce-item" style="display:flex; justify-content:space-between; align-items:center">
+                    <div><b>${s.name}</b><br><small style="color:var(--accent)">${s.code}</small></div>
+                    <div class="icon-circle" style="width:35px; height:35px; color:var(--danger); cursor:pointer" onclick='delArrayItem("students", ${JSON.stringify(s)})'><i class="fas fa-trash"></i></div>
+                </div>`).join('');
         }
 
-        // --- المجلدات ---
+        window.initiateExam = (id, subject) => {
+            activeExamData = DATA_CACHE.exams.find(e => e.id === id);
+            document.getElementById('auth-exam-title').innerText = "اختبار " + subject;
+            changeView('exam-auth');
+        };
+
+        window.checkExamAccess = () => {
+            const code = document.getElementById('studentExamCode').value.trim();
+            const student = DATA_CACHE.students.find(s => s.code === code);
+            if(!student) { showCustomAlert("الكود غير صحيح", true); return; }
+            const alreadyDone = DATA_CACHE.results.find(r => r.examId === activeExamData.id && r.studentCode === code);
+            if(alreadyDone) { showCustomAlert("أجريت الاختبار مسبقاً", true); return; }
+            verifiedStudent = student;
+            startExam();
+        };
+
+        window.startExam = () => {
+            document.getElementById('current-exam-title').innerText = activeExamData.subject;
+            document.getElementById('student-name-display').innerText = "مرحباً: " + verifiedStudent.name;
+            const qCont = document.getElementById('questions-container');
+            qCont.innerHTML = activeExamData.questions.map((q, qIdx) => `
+                <div class="box">
+                    <p>س${qIdx+1}: ${q.text} <span style="float:left; background:var(--primary); padding:2px 8px; border-radius:8px; font-size:0.7rem">${q.points} درجة</span></p>
+                    <div style="margin-top:15px">
+                        ${q.options.map((opt, oIdx) => `<div class="announce-item" style="cursor:pointer" onclick="selectOption(${qIdx}, ${oIdx}, this)">${opt}</div>`).join('')}
+                    </div>
+                </div>`).join('');
+            changeView('take-exam');
+        };
+
+        window.selectOption = (qIdx, oIdx, el) => {
+            el.parentElement.querySelectorAll('.announce-item').forEach(i => { i.style.borderColor = 'var(--glass-border)'; i.style.background = 'rgba(255,255,255,0.05)'; });
+            el.style.borderColor = 'var(--accent)';
+            el.style.background = 'rgba(0, 210, 255, 0.1)';
+            activeExamData.questions[qIdx].userAnswer = oIdx;
+        };
+
+        // Firebase Write Operations
+        window.addAnn = async () => {
+            const val = document.getElementById('newAnn').value;
+            if(val) { await updateDoc(PATHS.announces, { list: arrayUnion({ text: val, id: Date.now() }) }); document.getElementById('newAnn').value = ""; }
+        };
 
         window.addFolder = async () => {
             const name = document.getElementById('folderName').value.trim();
             if(!name) return;
-            await updateDoc(PATHS.lectures, {
-                folders: arrayUnion({ name, id: Date.now().toString(), files: [] })
-            });
+            await updateDoc(PATHS.lectures, { folders: arrayUnion({ name, id: Date.now().toString(), files: [] }) });
             document.getElementById('folderName').value = "";
-            showCustomAlert("تم إنشاء المجلد بنجاح");
-            loadManager();
-        };
-
-        window.loadFolders = async () => {
-            const cont = document.getElementById('folders-container');
-            showSkeleton('folders-container');
-            const snap = await getDoc(PATHS.lectures);
-            const folders = snap.data()?.folders || [];
-            
-            if(folders.length === 0) {
-                cont.innerHTML = "<p style='text-align:center; opacity:0.5; grid-column:span 2'>المكتبة فارغة حالياً</p>";
-                return;
-            }
-
-            cont.innerHTML = folders.map(f => `
-                <div class="folder-card" onclick="openFolder('${f.id}')">
-                    <i class="fas fa-folder"></i>
-                    <span class="folder-name">${f.name}</span>
-                    <span class="file-count">${f.files.length} ملفات</span>
-                </div>
-            `).join('');
-        };
-
-        // دالة التنزيل عبر كروم بنظام الأندرويد
-        window.openInChrome = (url) => {
-            const chromeIntent = "intent://" + url.replace(/^https?:\/\//, "") + "#Intent;scheme=https;package=com.android.chrome;end";
-            window.location.href = chromeIntent;
-            // في حال فشل الـ Intent، يتم الفتح بشكل عادي
-            setTimeout(() => { if(document.hasFocus()) window.open(url, '_blank'); }, 500);
-        };
-
-        window.openFolder = async (folderId) => {
-            const snap = await getDoc(PATHS.lectures);
-            const folders = snap.data()?.folders || [];
-            const folder = folders.find(f => f.id === folderId);
-            if(!folder) return;
-
-            document.getElementById('current-folder-title').innerText = folder.name;
-            const list = document.getElementById('files-list');
-            
-            if(folder.files.length === 0) {
-                list.innerHTML = "<p style='text-align:center; opacity:0.5; margin-top:30px;'>لا توجد ملفات داخل هذا المجلد</p>";
-            } else {
-                list.innerHTML = folder.files.map(f => `
-                    <div class="announce-item" style="display:flex; justify-content:space-between; align-items:center">
-                        <div style="display:flex; align-items:center; gap:10px">
-                            <i class="fas fa-file-pdf" style="color:#ff4757; font-size:1.5rem"></i>
-                            <span>${f.title}</span>
-                        </div>
-                        <div style="display:flex; gap:8px">
-                            <div class="file-btn view-btn" onclick="window.open('${f.link}', '_blank')">
-                                <i class="fas fa-eye"></i>
-                            </div>
-                            <div class="file-btn download-btn" onclick="openInChrome('${f.link}')">
-                                <i class="fas fa-download"></i>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            changeView('folder-content');
         };
 
         window.addFile = async () => {
             const folderId = document.getElementById('selectFolder').value;
             const title = document.getElementById('fileTitle').value.trim();
             const link = document.getElementById('fileLink').value.trim();
-            
-            if(!folderId || !title || !link) { showCustomAlert("يرجى إكمال البيانات"); return; }
-
-            const snap = await getDoc(PATHS.lectures);
-            let folders = snap.data()?.folders || [];
-            const folderIndex = folders.findIndex(f => f.id === folderId);
-            
-            if(folderIndex > -1) {
-                folders[folderIndex].files.push({ title, link, id: Date.now().toString() });
-                await updateDoc(PATHS.lectures, { folders: folders });
-                document.getElementById('fileTitle').value = "";
-                document.getElementById('fileLink').value = "";
-                showCustomAlert("تم رفع الملف للمجلد بنجاح");
-                loadManager();
+            if(!folderId || !title || !link) return;
+            let updatedFolders = [...DATA_CACHE.lectures];
+            const idx = updatedFolders.findIndex(f => f.id === folderId);
+            if(idx > -1) {
+                updatedFolders[idx].files.push({ title, link, id: Date.now().toString() });
+                await updateDoc(PATHS.lectures, { folders: updatedFolders });
+                document.getElementById('fileTitle').value = ""; document.getElementById('fileLink').value = "";
             }
         };
-
-        // --- إدارة المسجلين والامتحانات ---
 
         window.addStudent = async () => {
             const name = document.getElementById('newStudentName').value.trim();
             const code = document.getElementById('newStudentCode').value.trim();
-            if(!name || !code) { showCustomAlert("يرجى إدخال الاسم والكود"); return; }
-            await updateDoc(PATHS.students, {
-                list: arrayUnion({ name, code, id: Date.now().toString() })
-            });
-            document.getElementById('newStudentName').value = "";
-            document.getElementById('newStudentCode').value = "";
-            showCustomAlert("تمت إضافة الطالب بنجاح");
-            loadStudentsManager();
-        };
-
-        async function loadStudentsManager() {
-            const cont = document.getElementById('registered-students-list');
-            showSkeleton('registered-students-list');
-            const docSnap = await getDoc(PATHS.students);
-            const data = docSnap.data().list || [];
-            cont.innerHTML = data.map(s => `
-                <div class="announce-item" style="display:flex; justify-content:space-between; align-items:center">
-                    <div>
-                        <div style="font-weight:bold">${s.name}</div>
-                        <div style="font-size:0.75rem; color:var(--accent)">الكود: ${s.code}</div>
-                    </div>
-                    <div class="icon-circle" style="width:35px; height:35px; color:var(--danger); cursor:pointer" onclick='delArrayItem("students", ${JSON.stringify(s)})'><i class="fas fa-trash" style="font-size:1rem"></i></div>
-                </div>
-            `).join('');
-        }
-
-        window.loadStudentsForView = async () => {
-            const term = document.getElementById('nameSearch').value.toLowerCase();
-            const cont = document.getElementById('names-list');
-            const docSnap = await getDoc(PATHS.students);
-            const data = docSnap.data().list || [];
-            const filtered = data.filter(s => s.name.toLowerCase().includes(term));
-            cont.innerHTML = filtered.map((s, i) => `
-                <div class="announce-item" style="display:flex; justify-content:space-between">
-                    <span>${s.name}</span>
-                    <span style="opacity:0.4; font-size:0.8rem">#${i+1}</span>
-                </div>
-            `).join('');
-        };
-
-        async function loadStudentExams() {
-            const cont = document.getElementById('student-exams-container');
-            showSkeleton('student-exams-container');
-            const docSnap = await getDoc(PATHS.exams);
-            const data = docSnap.data().list || [];
-            cont.innerHTML = data.map(e => `
-                <div class="box">
-                    <h4 style="margin:0">${e.subject}</h4>
-                    <p style="font-size:0.8rem; opacity:0.6">يتكون من ${e.questions.length} أسئلة</p>
-                    <button class="btn" onclick="initiateExam('${e.id}', '${e.subject}')">بدء الاختبار الآن</button>
-                </div>
-            `).join('');
-        }
-
-        window.initiateExam = async (id, subject) => {
-            const docSnap = await getDoc(PATHS.exams);
-            const exams = docSnap.data().list || [];
-            activeExamData = exams.find(e => e.id === id);
-            document.getElementById('auth-exam-title').innerText = "اختبار " + subject;
-            changeView('exam-auth');
-        };
-
-        window.checkExamAccess = async () => {
-            const code = document.getElementById('studentExamCode').value.trim();
-            if(!code) { showCustomAlert("يرجى إدخال الكود"); return; }
-            const docSnap = await getDoc(PATHS.students);
-            const students = docSnap.data().list || [];
-            const student = students.find(s => s.code === code);
-            if(!student) { showCustomAlert("الكود غير مسجل بالنظام", true); return; }
-            
-            const resSnap = await getDoc(PATHS.results);
-            const allResults = resSnap.exists() ? (resSnap.data().list || []) : [];
-            const alreadyDone = allResults.find(r => r.examId === activeExamData.id && r.studentCode === code);
-            
-            if(alreadyDone) { showCustomAlert("لقد أجريت هذا الاختبار مسبقاً", true); return; }
-            verifiedStudent = { name: student.name, code: code };
-            startExam(activeExamData.id);
-        };
-
-        window.startExam = (id) => {
-            const exam = activeExamData;
-            document.getElementById('current-exam-title').innerText = exam.subject;
-            document.getElementById('student-name-display').innerText = "مرحباً: " + verifiedStudent.name;
-            const qCont = document.getElementById('questions-container');
-            qCont.innerHTML = exam.questions.map((q, qIdx) => `
-                <div class="box">
-                    <p style="font-weight:bold">س${qIdx+1}: ${q.text} <span style="float:left; background:var(--primary); padding:2px 8px; border-radius:8px; font-size:0.7rem">${q.points} درجة</span></p>
-                    <div style="margin-top:15px">
-                        ${q.options.map((opt, oIdx) => `
-                            <div class="announce-item" style="cursor:pointer; border:1px solid var(--glass-border)" onclick="selectOption(${qIdx}, ${oIdx}, this)">${opt}</div>
-                        `).join('')}
-                    </div>
-                </div>
-            `).join('');
-            changeView('take-exam');
-        };
-
-        window.selectOption = (qIdx, oIdx, el) => {
-            el.parentElement.querySelectorAll('.announce-item').forEach(i => {
-                i.style.borderColor = 'var(--glass-border)';
-                i.style.background = 'rgba(255,255,255,0.05)';
-            });
-            el.style.borderColor = 'var(--accent)';
-            el.style.background = 'rgba(0, 210, 255, 0.1)';
-            activeExamData.questions[qIdx].userAnswer = oIdx;
+            if(name && code) {
+                await updateDoc(PATHS.students, { list: arrayUnion({ name, code, id: Date.now().toString() }) });
+                document.getElementById('newStudentName').value = ""; document.getElementById('newStudentCode').value = "";
+            }
         };
 
         window.submitExam = async () => {
@@ -656,19 +625,10 @@
                 maxScore += q.points;
                 const isCorrect = q.userAnswer === q.correct;
                 if(isCorrect) totalScore += q.points;
-                return { q: q.text, userAns: q.options[q.userAnswer] || "لا توجد إجابة", correctAns: q.options[q.correct], correct: isCorrect };
+                return { q: q.text, userAns: q.options[q.userAnswer] || "لا توجد", correctAns: q.options[q.correct], correct: isCorrect };
             });
-            
-            const resultEntry = {
-                examId: activeExamData.id, studentName: verifiedStudent.name, studentCode: verifiedStudent.code,
-                subject: activeExamData.subject, score: totalScore, maxScore: maxScore,
-                details: results, createdAt: Date.now()
-            };
-
-            await updateDoc(PATHS.results, { list: arrayUnion(resultEntry) }).catch(async () => {
-                await setDoc(PATHS.results, { list: [resultEntry] });
-            });
-
+            const entry = { examId: activeExamData.id, studentName: verifiedStudent.name, studentCode: verifiedStudent.code, subject: activeExamData.subject, score: totalScore, maxScore, details: results, createdAt: Date.now() };
+            await updateDoc(PATHS.results, { list: arrayUnion(entry) });
             showResult(totalScore, maxScore, results);
         };
 
@@ -676,154 +636,87 @@
             document.getElementById('final-score').innerText = `${score} / ${max}`;
             document.getElementById('result-details').innerHTML = details.map(d => `
                 <div class="announce-item" style="font-size:0.85rem">
-                    <div style="font-weight:bold; margin-bottom:5px">${d.q}</div>
+                    <div style="font-weight:bold">${d.q}</div>
                     <div style="color:${d.correct ? 'var(--success)' : 'var(--danger)'}">إجابتك: ${d.userAns}</div>
                     ${!d.correct ? `<div style="color:var(--success)">الصحيحة: ${d.correctAns}</div>` : ''}
-                </div>
-            `).join('');
+                </div>`).join('');
             changeView('result');
         }
 
-        onSnapshot(PATHS.announces, (doc) => {
-            const list = document.getElementById('ann-list');
-            const data = doc.data() ? (doc.data().list || []) : [];
-            list.innerHTML = data.reverse().slice(0, 5).map(a => `<div class="announce-item"><i class="fas fa-info-circle" style="color:var(--accent); margin-left:8px"></i>${a.text}</div>`).join('');
-        });
-
-        // --- لوحة التحكم ---
-
-        window.loadManager = async () => {
-            const cont = document.getElementById('admin-control');
-            showSkeleton('admin-control');
-            
-            const annSnap = await getDoc(PATHS.announces);
-            let html = `<p style="color:var(--accent)">إدارة التبليغات:</p>`;
-            (annSnap.data().list || []).forEach(a => { html += `<div class="announce-item" style="display:flex; justify-content:space-between"><span>${a.text}</span><i class="fas fa-trash" style="color:var(--danger); cursor:pointer" onclick='delArrayItem("announces", ${JSON.stringify(a)})'></i></div>`; });
-            
-            const lecSnap = await getDoc(PATHS.lectures);
-            const folders = lecSnap.data()?.folders || [];
-            
-            const select = document.getElementById('selectFolder');
-            select.innerHTML = '<option value="">اختر المجلد المستهدف...</option>' + folders.map(f => `<option value="${f.id}">${f.name}</option>`).join('');
-
-            html += `<p style="color:var(--accent); margin-top:20px">إدارة المجلدات والملفات:</p>`;
-            folders.forEach(f => {
-                html += `
-                <div class="box" style="border: 1px solid rgba(245, 158, 11, 0.3)">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
-                        <strong style="color:#f59e0b"><i class="fas fa-folder"></i> ${f.name}</strong>
-                        <i class="fas fa-trash-alt" style="color:var(--danger); cursor:pointer" onclick='delFolder("${f.id}")'></i>
-                    </div>
-                    ${f.files.map(file => `
-                        <div class="announce-item" style="padding:8px 12px; margin-bottom:5px; font-size:0.85rem; display:flex; justify-content:space-between">
-                            <span><i class="fas fa-file-pdf" style="margin-left:5px"></i> ${file.title}</span>
-                            <i class="fas fa-times" style="color:var(--danger); cursor:pointer" onclick='delFileFromFolder("${f.id}", "${file.id}")'></i>
-                        </div>
-                    `).join('')}
-                </div>`;
-            });
-            cont.innerHTML = html;
-
-            const exCont = document.getElementById('manage-exams-list');
-            const exSnap = await getDoc(PATHS.exams);
-            exCont.innerHTML = `<p style="color:var(--accent); margin-top:20px">إدارة الامتحانات:</p>` + (exSnap.data().list || []).map(e => `<div class="announce-item" style="display:flex; justify-content:space-between"><span>${e.subject}</span><div><button onclick="viewResults('${e.id}')" style="background:var(--primary); color:white; border:none; padding:4px 10px; border-radius:8px; margin-left:10px">النتائج</button><i class="fas fa-trash" style="color:var(--danger); cursor:pointer" onclick='delArrayItem("exams", ${JSON.stringify(e)})'></i></div></div>`).join('');
-        };
-
-        window.delFolder = async (folderId) => {
+        // Helpers & UI
+        window.openModal = (id) => document.getElementById(id).style.display = 'flex';
+        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+        function showCustomAlert(m, e=false) { document.getElementById('alertMsg').innerText = m; document.getElementById('alertIcon').style.background = e ? 'var(--danger)' : 'var(--success)'; openModal('alertModal'); }
+        window.openInChrome = (u) => { window.location.href = "intent://" + u.replace(/^https?:\/\//, "") + "#Intent;scheme=https;package=com.android.chrome;end"; };
+        window.openInGDrive = (u) => { window.location.href = "intent://" + u.replace(/^https?:\/\//, "") + "#Intent;scheme=https;package=com.google.android.apps.docs;end"; };
+        window.openTelegram = () => window.location.href = "tg://join?invite=VglzL2mnCp5lMWYy";
+        
+        window.delArrayItem = (p, item) => {
             openModal('deleteModal');
             document.getElementById('confirmDeleteBtn').onclick = async () => {
-                const snap = await getDoc(PATHS.lectures);
-                let folders = snap.data()?.folders || [];
-                const updated = folders.filter(f => f.id !== folderId);
-                await updateDoc(PATHS.lectures, { folders: updated });
-                closeModal('deleteModal'); loadManager();
-                showCustomAlert("تم حذف المجلد بالكامل");
+                await updateDoc(PATHS[p], { list: arrayRemove(item) });
+                closeModal('deleteModal');
             };
         };
 
-        window.delFileFromFolder = async (folderId, fileId) => {
+        window.delFolder = async (id) => {
             openModal('deleteModal');
             document.getElementById('confirmDeleteBtn').onclick = async () => {
-                const snap = await getDoc(PATHS.lectures);
-                let folders = snap.data()?.folders || [];
-                const folderIdx = folders.findIndex(f => f.id === folderId);
-                if(folderIdx > -1) {
-                    folders[folderIdx].files = folders[folderIdx].files.filter(file => file.id !== fileId);
+                const updated = DATA_CACHE.lectures.filter(f => f.id !== id);
+                await updateDoc(PATHS.lectures, { folders: updated });
+                closeModal('deleteModal');
+            };
+        };
+
+        window.delFileFromFolder = async (fId, fileId) => {
+            openModal('deleteModal');
+            document.getElementById('confirmDeleteBtn').onclick = async () => {
+                let folders = [...DATA_CACHE.lectures];
+                const idx = folders.findIndex(f => f.id === fId);
+                if(idx > -1) {
+                    folders[idx].files = folders[idx].files.filter(file => file.id !== fileId);
                     await updateDoc(PATHS.lectures, { folders: folders });
                 }
-                closeModal('deleteModal'); loadManager();
-                showCustomAlert("تم حذف الملف");
-            };
-        };
-
-        window.delArrayItem = (pathKey, item) => {
-            openModal('deleteModal');
-            document.getElementById('confirmDeleteBtn').onclick = async () => {
-                await updateDoc(PATHS[pathKey], { list: arrayRemove(item) });
                 closeModal('deleteModal');
-                if(pathKey === 'students') loadStudentsManager();
-                else loadManager();
-                showCustomAlert("تم الحذف بنجاح");
             };
         };
 
         window.addOptionField = () => {
             const container = document.getElementById('options-area');
             const count = container.querySelectorAll('input').length + 1;
-            const input = document.createElement('input');
-            input.type = 'text'; input.className = 'q-opt'; input.placeholder = `خيار ${count}`;
+            const input = document.createElement('input'); input.type = 'text'; input.className = 'q-opt'; input.placeholder = `خيار ${count}`;
             container.appendChild(input);
             const select = document.getElementById('correctOptIndex');
-            const opt = document.createElement('option');
-            opt.value = count - 1; opt.innerText = `خيار ${count} هو الصحيح`;
+            const opt = document.createElement('option'); opt.value = count - 1; opt.innerText = `خيار ${count} هو الصحيح`;
             select.appendChild(opt);
         };
 
         window.addToDraft = () => {
             const text = document.getElementById('qText').value;
-            const points = document.getElementById('qPoints').value;
+            const points = parseInt(document.getElementById('qPoints').value);
             const opts = Array.from(document.querySelectorAll('.q-opt')).map(i => i.value).filter(v => v !== "");
             const correct = parseInt(document.getElementById('correctOptIndex').value);
-            if(!text || !points || opts.length < 2) { showCustomAlert("أكمل بيانات السؤال أولاً"); return; }
-            currentDraftQuestions.push({ text, options: opts, correct, points: parseInt(points) });
-            renderDraft();
+            if(!text || isNaN(points) || opts.length < 2) return;
+            currentDraftQuestions.push({ text, options: opts, correct, points });
+            document.getElementById('draft-questions').innerHTML = currentDraftQuestions.map((q, i) => `<div class="announce-item" style="font-size:0.8rem">${i+1}. ${q.text}</div>`).join('');
             document.getElementById('qText').value = "";
         };
 
-        function renderDraft() {
-            document.getElementById('draft-questions').innerHTML = currentDraftQuestions.map((q, i) => `<div class="announce-item" style="font-size:0.8rem">${i+1}. ${q.text}</div>`).join('');
-        }
-
         window.publishExam = async () => {
             const subject = document.getElementById('examSubject').value;
-            if(!subject || currentDraftQuestions.length === 0) { showCustomAlert("بيانات الامتحان ناقصة"); return; }
+            if(!subject || currentDraftQuestions.length === 0) return;
             await updateDoc(PATHS.exams, { list: arrayUnion({ subject, questions: currentDraftQuestions, id: Date.now().toString(), createdAt: Date.now() }) });
-            showCustomAlert("تم نشر الامتحان بنجاح");
             currentDraftQuestions = []; changeView('admin');
         };
 
-        window.addAnn = async () => {
-            const val = document.getElementById('newAnn').value;
-            if(val) { 
-                await updateDoc(PATHS.announces, { list: arrayUnion({ text: val, id: Date.now() }) }); 
-                document.getElementById('newAnn').value = ""; loadManager(); 
-            }
+        window.viewResults = (examId) => {
+            const cont = document.getElementById('exam-results-container');
+            const filtered = DATA_CACHE.results.filter(r => r.examId === examId);
+            cont.innerHTML = filtered.length === 0 ? "<p>لا توجد نتائج</p>" : 
+                filtered.map(r => `<div class="announce-item" style="display:flex; justify-content:space-between"><div><b>${r.studentName}</b><br><small>الدرجة: ${r.score} / ${r.maxScore}</small></div></div>`).join('');
+            changeView('results-list');
         };
 
-        window.openModal = (id) => document.getElementById(id).style.display = 'flex';
-        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
-        window.openTelegram = () => window.location.href = "tg://join?invite=VglzL2mnCp5lMWYy";
-        
-        window.viewResults = async (examId) => {
-            const cont = document.getElementById('exam-results-container');
-            showSkeleton('exam-results-container');
-            changeView('results-list');
-            const resSnap = await getDoc(PATHS.results);
-            const allResults = resSnap.exists() ? (resSnap.data().list || []) : [];
-            const filtered = allResults.filter(r => r.examId === examId);
-            if(filtered.length === 0) { cont.innerHTML = "<p>لا توجد نتائج حتى الآن.</p>"; return; }
-            cont.innerHTML = filtered.map(r => `<div class="announce-item" style="display:flex; justify-content:space-between"><div><b>${r.studentName}</b><br><small>الدرجة: ${r.score}</small></div></div>`).join('');
-        };
     </script>
 </body>
 </html>
