@@ -21,12 +21,11 @@
             --card-bg: #ffffff;
         }
 
-        /* أنماط الوضع الداكن الصارم */
         body.dark-mode {
             --bg-dark: #000000;
             --bg-body: #0a0a0a;
-            --text-main: #ffffff; /* تم تغيير اللون هنا ليكون أبيض واضح */
-            --glass-heavy: #000000; /* الهيدر والفوتر أسود تماماً */
+            --text-main: #ffffff;
+            --glass-heavy: #000000;
             --glass-border: #262626;
             --card-bg: #121212;
             background-color: var(--bg-body);
@@ -39,7 +38,7 @@
         body.dark-mode .folder-card,
         body.dark-mode .modal-cont {
             background-color: var(--card-bg) !important;
-            color: #ffffff !important; /* نصوص الكروت بيضاء */
+            color: #ffffff !important;
             border-color: var(--glass-border);
         }
 
@@ -58,7 +57,7 @@
         body.dark-mode .tab-btn.active { background: #262626; color: white; }
         
         body.dark-mode .card span, body.dark-mode h3, body.dark-mode h4, body.dark-mode p {
-            color: #ffffff !important; /* ضمان وضوح كافة النصوص */
+            color: #ffffff !important;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
@@ -98,7 +97,6 @@
 
         .header-actions { display: flex; align-items: center; gap: 15px; }
         
-        /* زر الوضع الداكن المحسن */
         .theme-toggle { 
             font-size: 1.4rem; 
             color: #ffffff; 
@@ -271,35 +269,14 @@
         }
     </style>
 </head>
-<body class="dark-mode"> <div class="telegram-float-btn" onclick="openTelegram()">
+<body class="dark-mode"> 
+    <div class="telegram-float-btn" onclick="openTelegram()">
         <i class="fab fa-telegram-plane"></i>
     </div>
 
     <div id="fullImageModal" onclick="closeImageFull()">
         <span class="close-img">×</span>
         <img id="imgViewer" src="" alt="جدول" onclick="event.stopPropagation()">
-    </div>
-
-    <div id="deleteModal" class="modal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 5000;">
-        <div class="modal-cont" style="background: #ffffff; border: 1px solid var(--danger); padding: 30px; border-radius: 30px; width: 85%; max-width: 350px; text-align: center;">
-            <div class="logo-placeholder" style="margin: 0 auto 15px; background: var(--danger); color: white;"><i class="fas fa-trash-alt"></i></div>
-            <h3 style="margin-bottom: 10px; color: #1e293b;">تأكيد الحذف</h3>
-            <p style="opacity: 0.8; font-size: 0.9rem; margin-bottom: 25px; color: #64748b;">هل أنت متأكد تماماً من حذف هذا العنصر؟</p>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn" id="confirmDeleteBtn" style="background: var(--danger); flex: 1;">حذف</button>
-                <button class="btn" onclick="closeModal('deleteModal')" style="background: #f1f5f9; color: #1e293b; flex: 1;">إلغاء</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="loginModal" class="modal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 3000;">
-        <div class="modal-cont" style="background: #ffffff; border: 1px solid var(--primary); padding: 30px; border-radius: 30px; width: 85%; max-width: 350px; text-align: center;">
-            <div class="logo-placeholder" style="margin: 0 auto 15px; color: white; background: var(--primary);"><i class="fas fa-lock"></i></div>
-            <h3 style="color: #1e293b;">بوابة الإدارة</h3>
-            <input type="password" id="adminPass" placeholder="الرمز السري">
-            <button class="btn" onclick="verifyAdmin()">دخول</button>
-            <p onclick="closeModal('loginModal')" style="margin-top:15px; opacity:0.5; cursor:pointer; color: #1e293b;">إلغاء</p>
-        </div>
     </div>
 
     <div id="alertModal" class="modal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 4000;">
@@ -351,19 +328,17 @@
                     <div class="icon-circle"><i class="fas fa-file-invoice c-3"></i></div>
                     <span>مركز الاختبارات</span>
                 </div>
-                </div>
+            </div>
         </div>
 
         <div id="lectures-view" class="view">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
                 <h3 onclick="changeView('main')" style="cursor:pointer; margin:0"><i class="fas fa-arrow-right"></i> المكتبة الرقمية</h3>
             </div>
-            
             <div class="tabs-container">
                 <button class="tab-btn" id="btn-course1" onclick="switchCourse(1)">الكورس الأول</button>
                 <button class="tab-btn active" id="btn-course2" onclick="switchCourse(2)">الكورس الثاني</button>
             </div>
-
             <div id="folders-container" class="folder-grid"></div>
         </div>
 
@@ -413,102 +388,6 @@
             <input type="text" id="nameSearch" placeholder="ابحث عن اسم زميل..." onkeyup="renderStudentsView()" style="border-radius:50px; background: #ffffff; border: 1px solid var(--glass-border);">
             <div id="names-list"></div>
         </div>
-
-        <div id="admin-view" class="view">
-            <h3 style="color:var(--primary)">لوحة التحكم الاحترافية</h3>
-            
-            <div id="doctor-section" style="display: none;">
-                <div class="box">
-                    <h4><i class="fas fa-plus-circle"></i> إنشاء امتحان</h4>
-                    <input type="text" id="examSubject" placeholder="اسم المادة">
-                    <div id="draft-questions"></div>
-                    <div style="background: #f8fafc; padding: 15px; border-radius: 20px; border: 1px dashed var(--primary); margin-top:10px;">
-                        <input type="text" id="qText" placeholder="نص السؤال">
-                        <div id="options-area">
-                            <input type="text" class="q-opt" placeholder="الخيار 1">
-                            <input type="text" class="q-opt" placeholder="الخيار 2">
-                        </div>
-                        <button class="btn" style="width: auto; padding: 5px 20px; margin-bottom: 10px;" onclick="addOptionField()">إضافة خيار +</button>
-                        <input type="number" id="qPoints" placeholder="الدرجة">
-                        <select id="correctOptIndex">
-                            <option value="0">الخيار 1 هو الصحيح</option>
-                            <option value="1">الخيار 2 هو الصحيح</option>
-                        </select>
-                        <button class="btn" onclick="addToDraft()">إضافة السؤال</button>
-                    </div>
-                    <button class="btn" style="margin-top: 20px; background: var(--success)" onclick="publishExam()">نشر الامتحان الآن</button>
-                </div>
-                <div id="manage-exams-list"></div>
-            </div>
-
-            <div id="manager-section" style="display: none;">
-                <div class="box">
-                    <h4>نشر تبليغ جديد</h4>
-                    <input type="text" id="newAnn" placeholder="اكتب نص التبليغ هنا...">
-                    <button class="btn" onclick="addAnn()">نشر للجميع</button>
-                </div>
-                
-                <div class="box">
-                    <h4><i class="fas fa-folder-plus"></i> إنشاء مجلد جديد</h4>
-                    <input type="text" id="folderName" placeholder="اسم المجلد">
-                    <select id="folderCourseType">
-                        <option value="2">الكورس الثاني (جديد)</option>
-                        <option value="1">الكورس الأول</option>
-                    </select>
-                    <button class="btn" onclick="addFolder()">إنشاء مجلد</button>
-                </div>
-
-                <div class="box">
-                    <h4><i class="fas fa-file-pdf"></i> إضافة ملف PDF</h4>
-                    <select id="selectFolder"></select>
-                    <input type="text" id="fileTitle" placeholder="عنوان المحاضرة">
-                    <input type="text" id="fileLink" placeholder="رابط الملف">
-                    <button class="btn" style="background:var(--success)" onclick="addFile()">حفظ الملف</button>
-                </div>
-                <div id="admin-control"></div>
-            </div>
-
-            <div id="student-manager-section" style="display: none;">
-                <div class="box">
-                    <h4><i class="fas fa-layer-group"></i> إدارة المجموعات (الكروبات)</h4>
-                    <div style="display:flex; gap:10px;">
-                        <input type="text" id="newGroupName" placeholder="اسم المجموعة (مثلاً Group A)" style="margin-bottom:0">
-                        <button class="btn" style="width:auto; padding:0 20px" onclick="addGroup()">إضافة</button>
-                    </div>
-                    <div id="groups-manage-list" style="margin-top:15px;"></div>
-                </div>
-
-                <div class="box">
-                    <h4>تسجيل طالب جديد</h4>
-                    <input type="text" id="newStudentName" placeholder="الاسم الكامل">
-                    <input type="text" id="newStudentCode" placeholder="كود الدخول">
-                    <select id="newStudentGroupSelect">
-                        <option value="">اختر المجموعة...</option>
-                    </select>
-                    <button class="btn" onclick="addStudent()">تأكيد التسجيل</button>
-                </div>
-                <div id="registered-students-list"></div>
-            </div>
-
-            <div id="schedule-manager-section" style="display: none;">
-                <div class="box">
-                    <h4><i class="fas fa-calendar-plus"></i> إضافة جدول جديد</h4>
-                    <input type="text" id="schedTitle" placeholder="اسم الجدول (مثلاً: جدول المرحلة الأولى)">
-                    <div style="background: #f1f5f9; padding: 15px; border-radius: 15px; border: 2px dashed var(--primary); text-align: center; margin-bottom: 15px;">
-                        <input type="file" id="schedFile" accept="image/*" style="display:none">
-                        <button class="btn" onclick="document.getElementById('schedFile').click()" style="background:#475569; width:auto; padding:8px 20px;"><i class="fas fa-image"></i> اختر الصورة من الهاتف</button>
-                        <p id="fileNameDisplay" style="font-size: 0.8rem; margin-top: 10px; opacity: 0.6;">لم يتم اختيار صورة</p>
-                    </div>
-                    <button class="btn" onclick="uploadSchedule()" style="background:var(--success)">نشر الجدول الآن</button>
-                </div>
-                <div id="admin-schedules-list"></div>
-            </div>
-        </div>
-
-        <div id="results-list-view" class="view">
-            <h3 onclick="changeView('admin')" style="cursor:pointer"><i class="fas fa-arrow-right"></i> نتائج الاختبار</h3>
-            <div id="exam-results-container"></div>
-        </div>
     </div>
 
     <nav class="nav-bar">
@@ -516,7 +395,7 @@
         <div class="nav-link" onclick="changeView('lectures', this)"><i class="fas fa-folder-open"></i></div>
         <div style="width: 60px;"></div> 
         <div class="nav-link" onclick="changeView('students', this)"><i class="fas fa-users"></i></div>
-        <div class="nav-link" onclick="openModal('loginModal')"><i class="fas fa-user-shield"></i></div>
+        <div class="nav-link" onclick="openTelegram()"><i class="fab fa-telegram-plane"></i></div>
     </nav>
 
     <script type="module">
@@ -545,16 +424,9 @@
         };
 
         let DATA_CACHE = {
-            announces: [],
-            students: [],
-            groups: [], 
-            exams: [],
-            lectures: [],
-            results: [],
-            schedules: [] 
+            announces: [], students: [], groups: [], exams: [], lectures: [], results: [], schedules: [] 
         };
 
-        let currentDraftQuestions = [];
         let activeExamData = null;
         let verifiedStudent = null;
         let currentCourseTab = 2; 
@@ -563,26 +435,20 @@
 
         function initRealtimeSync() {
             onSnapshot(PATHS.announces, (s) => { DATA_CACHE.announces = s.data()?.list || []; renderAnnounces(); });
-            onSnapshot(PATHS.lectures, (s) => { DATA_CACHE.lectures = s.data()?.folders || []; renderFolders(); if(document.getElementById('admin-view').classList.contains('active-view')) loadManager(); });
-            
+            onSnapshot(PATHS.lectures, (s) => { DATA_CACHE.lectures = s.data()?.folders || []; renderFolders(); });
             onSnapshot(PATHS.students, (s) => { 
                 const data = s.data();
                 DATA_CACHE.students = data?.list || []; 
                 DATA_CACHE.groups = data?.groups || []; 
                 if(document.getElementById('students-view').classList.contains('active-view')) renderStudentsView();
-                if(document.getElementById('student-manager-section').style.display === 'block') renderStudentsManager();
             });
-
             onSnapshot(PATHS.exams, (s) => { DATA_CACHE.exams = s.data()?.list || []; renderExams(); });
             onSnapshot(PATHS.results, (s) => { DATA_CACHE.results = s.data()?.list || []; });
-            
             onSnapshot(PATHS.schedules, (s) => { 
                 DATA_CACHE.schedules = s.data()?.list || []; 
                 renderSchedules(); 
-                if(document.getElementById('schedule-manager-section').style.display === 'block') renderSchedulesManager();
             });
         }
-
         initRealtimeSync();
 
         window.switchCourse = (courseNum) => {
@@ -596,77 +462,41 @@
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view'));
             const target = document.getElementById(vName + '-view');
             if(target) target.classList.add('active-view');
-            
             if(el) {
                 document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
                 el.classList.add('active');
             }
-
             if(vName === 'lectures') renderFolders();
-            if(vName === 'admin') loadManager();
             if(vName === 'exams-list') renderExams();
             if(vName === 'students') renderStudentsView();
-            if(vName === 'student-manager-section') renderStudentsManager();
             if(vName === 'schedules') renderSchedules();
-            
-            // تم التعديل هنا: منع إعادة التحميل واستخدام History API بشكل صحيح
-            if (vName !== 'main') {
-                history.pushState({view: vName}, '', '#' + vName);
-            }
-
+            if (vName !== 'main') history.pushState({view: vName}, '', '#' + vName);
             window.scrollTo({top: 0, behavior: 'smooth'});
         };
 
-        // منع تحديث الصفحة عند الضغط على زر الرجوع في الهاتف
         window.onpopstate = function(event) {
-            if (event.state && event.state.view) {
-                changeView(event.state.view, null);
-            } else {
-                // إذا لم يوجد حالة (الحالة الرئيسية) نرجع للواجهة الرئيسية بدون ريلود
-                document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view'));
-                document.getElementById('main-view').classList.add('active-view');
-                document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-                document.querySelector('.nav-link:first-child').classList.add('active');
-            }
+            if (event.state && event.state.view) changeView(event.state.view, null);
+            else changeView('main', document.querySelector('.nav-link:first-child'));
         };
 
         function renderAnnounces() {
             const list = document.getElementById('ann-list');
-            list.innerHTML = DATA_CACHE.announces.slice(-5).reverse().map(a => `
-                <div class="announce-item"><i class="fas fa-info-circle" style="color:var(--primary); margin-left:8px"></i>${a.text}</div>
-            `).join('');
+            list.innerHTML = DATA_CACHE.announces.slice(-5).reverse().map(a => `<div class="announce-item"><i class="fas fa-info-circle" style="color:var(--primary); margin-left:8px"></i>${a.text}</div>`).join('');
         }
 
         function renderFolders() {
             const cont = document.getElementById('folders-container');
-            const filteredFolders = DATA_CACHE.lectures.filter(f => {
-                const type = f.courseType || 1; 
-                return parseInt(type) === currentCourseTab;
-            });
-
+            const filteredFolders = DATA_CACHE.lectures.filter(f => (f.courseType || 1) === currentCourseTab);
             if(filteredFolders.length === 0) {
-                cont.innerHTML = `<p style='text-align:center; opacity:0.5; grid-column:span 2; padding: 40px 0;'>لا توجد مجلدات في الكورس ${currentCourseTab === 1 ? 'الأول' : 'الثاني'} حالياً</p>`;
+                cont.innerHTML = `<p style='text-align:center; opacity:0.5; grid-column:span 2; padding: 40px 0;'>لا توجد مجلدات حالياً</p>`;
                 return;
             }
-
-            cont.innerHTML = filteredFolders.map(f => `
-                <div class="folder-card" onclick="openFolder('${f.id}')">
-                    <i class="fas fa-folder"></i>
-                    <span class="folder-name">${f.name}</span>
-                    <span class="file-count">${f.files.length} ملفات</span>
-                </div>
-            `).join('');
+            cont.innerHTML = filteredFolders.map(f => `<div class="folder-card" onclick="openFolder('${f.id}')"><i class="fas fa-folder"></i><span class="folder-name">${f.name}</span><span class="file-count">${f.files.length} ملفات</span></div>`).join('');
         }
 
         function renderExams() {
             const cont = document.getElementById('student-exams-container');
-            cont.innerHTML = DATA_CACHE.exams.map(e => `
-                <div class="box">
-                    <h4 style="margin:0">${e.subject}</h4>
-                    <p style="font-size:0.8rem; opacity:0.6">يتكون من ${e.questions.length} أسئلة</p>
-                    <button class="btn" onclick="initiateExam('${e.id}', '${e.subject}')">بدء الاختبار</button>
-                </div>
-            `).join('');
+            cont.innerHTML = DATA_CACHE.exams.map(e => `<div class="box"><h4 style="margin:0">${e.subject}</h4><p style="font-size:0.8rem; opacity:0.6">يتكون من ${e.questions.length} أسئلة</p><button class="btn" onclick="initiateExam('${e.id}', '${e.subject}')">بدء الاختبار</button></div>`).join('');
         }
 
         function renderSchedules() {
@@ -675,77 +505,35 @@
                 cont.innerHTML = "<p style='text-align:center; opacity:0.5'>لا توجد جداول منشورة حالياً</p>";
                 return;
             }
-            cont.innerHTML = DATA_CACHE.schedules.map(s => `
-                <div class="box">
-                    <h4 style="margin-top:0">${s.title}</h4>
-                    <img src="${s.img}" class="schedule-img" onclick="openImageFull('${s.img}')">
-                    <p style="font-size:0.7rem; opacity:0.5; margin-top:10px">اضغط على الصورة للتكبير</p>
-                </div>
-            `).join('');
+            cont.innerHTML = DATA_CACHE.schedules.map(s => `<div class="box"><h4 style="margin-top:0">${s.title}</h4><img src="${s.img}" class="schedule-img" onclick="openImageFull('${s.img}')"><p style="font-size:0.7rem; opacity:0.5; margin-top:10px">اضغط على الصورة للتكبير</p></div>`).join('');
         }
 
         window.openImageFull = (src) => {
             const modal = document.getElementById('fullImageModal');
-            const img = document.getElementById('imgViewer');
-            img.src = src;
+            document.getElementById('imgViewer').src = src;
             modal.style.display = 'flex';
         };
-
-        window.closeImageFull = () => {
-            document.getElementById('fullImageModal').style.display = 'none';
-        };
+        window.closeImageFull = () => document.getElementById('fullImageModal').style.display = 'none';
 
         window.renderStudentsView = () => {
             const term = document.getElementById('nameSearch').value.toLowerCase().trim();
             const cont = document.getElementById('names-list');
-            
             if (term) {
                 const filtered = DATA_CACHE.students.filter(s => s.name.toLowerCase().includes(term));
-                cont.innerHTML = filtered.length ? filtered.map((s, i) => {
+                cont.innerHTML = filtered.length ? filtered.map(s => {
                     const grp = DATA_CACHE.groups.find(g => g.id === s.groupId);
-                    return `
-                    <div class="announce-item" style="display:flex; justify-content:space-between; align-items:center;">
-                        <div>
-                            <span>${s.name}</span>
-                            ${grp ? `<span class="group-badge">${grp.name}</span>` : ''}
-                        </div>
-                    </div>`;
+                    return `<div class="announce-item"><div><span>${s.name}</span>${grp ? `<span class="group-badge" style="margin-right:10px; font-size:0.7rem; color:var(--primary)">(${grp.name})</span>` : ''}</div></div>`;
                 }).join('') : '<p style="text-align:center; opacity:0.5">لا توجد نتائج</p>';
             } else {
-                if (DATA_CACHE.groups.length === 0 && DATA_CACHE.students.length > 0) {
-                    cont.innerHTML = DATA_CACHE.students.map((s, i) => `
-                        <div class="announce-item" style="display:flex; justify-content:space-between">
-                            <span>${s.name}</span><span style="opacity:0.4; font-size:0.8rem">#${i+1}</span>
-                        </div>
-                    `).join('');
-                } else {
-                    let html = '';
-                    DATA_CACHE.groups.forEach(group => {
-                        const studentsInGroup = DATA_CACHE.students.filter(s => s.groupId === group.id);
-                        if(studentsInGroup.length > 0) {
-                            html += `<div class="group-header">
-                                        <span>${group.name}</span>
-                                        <span style="font-size:0.8rem; opacity:0.8">${studentsInGroup.length} طالب</span>
-                                     </div>`;
-                            html += studentsInGroup.map((s, i) => `
-                                <div class="announce-item" style="display:flex; justify-content:space-between; margin-right:10px; border-right:2px solid var(--primary);">
-                                    <span>${s.name}</span>
-                                </div>
-                            `).join('');
-                        }
-                    });
-
-                    const unassigned = DATA_CACHE.students.filter(s => !s.groupId || !DATA_CACHE.groups.find(g => g.id === s.groupId));
-                    if(unassigned.length > 0) {
-                        html += `<div class="group-header" style="background:#f1f5f9; color:#64748b"><span>غير مصنف</span></div>`;
-                        html += unassigned.map((s, i) => `
-                            <div class="announce-item" style="display:flex; justify-content:space-between; margin-right:10px; border-right:2px solid #94a3b8;">
-                                <span>${s.name}</span>
-                            </div>
-                        `).join('');
+                let html = '';
+                DATA_CACHE.groups.forEach(group => {
+                    const studentsInGroup = DATA_CACHE.students.filter(s => s.groupId === group.id);
+                    if(studentsInGroup.length > 0) {
+                        html += `<div class="group-header"><span>${group.name}</span></div>`;
+                        html += studentsInGroup.map(s => `<div class="announce-item" style="margin-right:10px; border-right:2px solid var(--primary);"><span>${s.name}</span></div>`).join('');
                     }
-                    cont.innerHTML = html || '<p style="text-align:center; opacity:0.5">القائمة فارغة</p>';
-                }
+                });
+                cont.innerHTML = html || '<p style="text-align:center; opacity:0.5">القائمة فارغة</p>';
             }
         };
 
@@ -755,207 +543,8 @@
             document.getElementById('current-folder-title').innerText = folder.name;
             const list = document.getElementById('files-list');
             list.innerHTML = folder.files.length === 0 ? "<p style='text-align:center; opacity:0.5; margin-top:30px;'>فارغ</p>" :
-                folder.files.map(f => `
-                <div class="announce-item" style="display:flex; justify-content:space-between; align-items:center">
-                    <div style="display:flex; align-items:center; gap:10px">
-                        <i class="fas fa-file-pdf" style="color:#ff4757; font-size:1.5rem"></i>
-                        <span>${f.title}</span>
-                    </div>
-                    <div style="display:flex; gap:8px">
-                        <div class="file-btn view-btn" onclick="openInGDrive('${f.link}')"><i class="fas fa-eye"></i></div>
-                        <div class="file-btn download-btn" onclick="openInChrome('${f.link}')"><i class="fas fa-download"></i></div>
-                    </div>
-                </div>`).join('');
+                folder.files.map(f => `<div class="announce-item" style="display:flex; justify-content:space-between; align-items:center"><div style="display:flex; align-items:center; gap:10px"><i class="fas fa-file-pdf" style="color:#ff4757; font-size:1.5rem"></i><span>${f.title}</span></div><div style="display:flex; gap:8px"><div class="file-btn view-btn" onclick="openInGDrive('${f.link}')"><i class="fas fa-eye"></i></div><div class="file-btn download-btn" onclick="openInChrome('${f.link}')"><i class="fas fa-download"></i></div></div></div>`).join('');
             changeView('folder-content');
-        };
-
-        window.verifyAdmin = () => {
-            const pass = document.getElementById('adminPass').value;
-            const sections = ['doctor-section', 'manager-section', 'student-manager-section', 'schedule-manager-section'];
-            sections.forEach(s => document.getElementById(s).style.display = 'none');
-
-            if(pass === "vipabnzadinc2005") {
-                document.getElementById('manager-section').style.display = 'block';
-                closeModal('loginModal'); changeView('admin');
-            } else if(pass === "vipabnzadinc2004") {
-                document.getElementById('doctor-section').style.display = 'block';
-                closeModal('loginModal'); changeView('admin');
-            } else if(pass === "vipabnzadinc2003") {
-                document.getElementById('student-manager-section').style.display = 'block';
-                renderStudentsManager();
-                closeModal('loginModal'); changeView('admin');
-            } else if(pass === "jadwal20251999") { 
-                document.getElementById('schedule-manager-section').style.display = 'block';
-                renderSchedulesManager();
-                closeModal('loginModal'); changeView('admin');
-            } else { showCustomAlert("رمز الدخول غير صحيح", true); }
-        };
-
-        function renderSchedulesManager() {
-            const cont = document.getElementById('admin-schedules-list');
-            cont.innerHTML = `<p style="color:var(--primary); margin-top:20px">الجداول المنشورة:</p>` + 
-                DATA_CACHE.schedules.map(s => `
-                <div class="announce-item" style="display:flex; justify-content:space-between; align-items:center">
-                    <span>${s.title}</span>
-                    <i class="fas fa-trash" style="color:var(--danger); cursor:pointer" onclick='delSchedule(${JSON.stringify(s)})'></i>
-                </div>
-            `).join('');
-        }
-
-        document.getElementById('schedFile').onchange = function() {
-            document.getElementById('fileNameDisplay').innerText = this.files[0] ? this.files[0].name : "لم يتم اختيار صورة";
-        };
-
-        window.uploadSchedule = async () => {
-            const title = document.getElementById('schedTitle').value.trim();
-            const file = document.getElementById('schedFile').files[0];
-            
-            if(!title || !file) { showCustomAlert("يرجى كتابة الاسم واختيار صورة", true); return; }
-
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                const base64Img = e.target.result;
-                const newSched = { title, img: base64Img, id: Date.now().toString() };
-                
-                try {
-                    await updateDoc(PATHS.schedules, { list: arrayUnion(newSched) }).catch(async (err) => {
-                        await setDoc(PATHS.schedules, { list: [newSched] });
-                    });
-                    showCustomAlert("تم النشر بنجاح");
-                    document.getElementById('schedTitle').value = "";
-                    document.getElementById('schedFile').value = "";
-                    document.getElementById('fileNameDisplay').innerText = "لم يتم اختيار صورة";
-                } catch (error) {
-                    showCustomAlert("حدث خطأ في الرفع", true);
-                }
-            };
-            reader.readAsDataURL(file);
-        };
-
-        window.delSchedule = (item) => {
-            openModal('deleteModal');
-            document.getElementById('confirmDeleteBtn').onclick = async () => {
-                await updateDoc(PATHS.schedules, { list: arrayRemove(item) });
-                closeModal('deleteModal');
-            };
-        };
-
-        window.loadManager = () => {
-            const cont = document.getElementById('admin-control');
-            let html = `<p style="color:var(--primary)">إدارة التبليغات:</p>`;
-            DATA_CACHE.announces.forEach(a => { html += `<div class="announce-item" style="display:flex; justify-content:space-between"><span>${a.text}</span><i class="fas fa-trash" style="color:var(--danger); cursor:pointer" onclick='delArrayItem("announces", ${JSON.stringify(a)})'></i></div>`; });
-            
-            const select = document.getElementById('selectFolder');
-            select.innerHTML = '<option value="">اختر المجلد...</option>' + DATA_CACHE.lectures.map(f => `<option value="${f.id}">${f.name} (كورس ${f.courseType || 1})</option>`).join('');
-
-            html += `<p style="color:var(--primary); margin-top:20px">إدارة الملفات وترتيبها:</p>`;
-            DATA_CACHE.lectures.forEach(f => {
-                html += `<div class="box" style="border: 1px solid rgba(99, 102, 241, 0.3)">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
-                        <strong style="color:var(--primary)"><i class="fas fa-folder"></i> ${f.name} <span style="font-size:0.7rem; color:#94a3b8">(كورس ${f.courseType || 1})</span></strong>
-                        <i class="fas fa-trash-alt" style="color:var(--danger); cursor:pointer" onclick='delFolder("${f.id}")'></i>
-                    </div>
-                    ${f.files.map((file, fIdx) => `
-                        <div class="announce-item" style="padding:8px 12px; margin-bottom:5px; font-size:0.85rem; display:flex; justify-content:space-between; align-items:center">
-                            <span>${file.title}</span>
-                            <div style="display:flex; gap:12px; align-items:center">
-                                ${fIdx > 0 ? `<i class="fas fa-arrow-up" style="cursor:pointer; color:var(--primary)" onclick="moveFile('${f.id}', ${fIdx}, -1)"></i>` : ''}
-                                ${fIdx < f.files.length - 1 ? `<i class="fas fa-arrow-down" style="cursor:pointer; color:var(--primary)" onclick="moveFile('${f.id}', ${fIdx}, 1)"></i>` : ''}
-                                <i class="fas fa-times" style="color:var(--danger); cursor:pointer; margin-right:5px" onclick='delFileFromFolder("${f.id}", "${file.id}")'></i>
-                            </div>
-                        </div>`).join('')}
-                </div>`;
-            });
-            cont.innerHTML = html;
-
-            const exCont = document.getElementById('manage-exams-list');
-            exCont.innerHTML = `<p style="color:var(--primary); margin-top:20px">إدارة الامتحانات:</p>` + DATA_CACHE.exams.map(e => `<div class="announce-item" style="display:flex; justify-content:space-between"><span>${e.subject}</span><div><button onclick="viewResults('${e.id}')" style="background:var(--primary); color:white; border:none; padding:4px 10px; border-radius:8px; margin-left:10px">النتائج</button><i class="fas fa-trash" style="color:var(--danger); cursor:pointer" onclick='delArrayItem("exams", ${JSON.stringify(e)})'></i></div></div>`).join('');
-        };
-
-        window.moveFile = async (folderId, fileIndex, direction) => {
-            let folders = [...DATA_CACHE.lectures];
-            const fIdx = folders.findIndex(f => f.id === folderId);
-            if (fIdx === -1) return;
-            
-            let files = [...folders[fIdx].files];
-            const targetIdx = fileIndex + direction;
-            
-            if (targetIdx < 0 || targetIdx >= files.length) return;
-            
-            [files[fileIndex], files[targetIdx]] = [files[targetIdx], files[fileIndex]];
-            folders[fIdx].files = files;
-            
-            await updateDoc(PATHS.lectures, { folders: folders });
-        };
-
-        function renderStudentsManager() {
-            const grpSelect = document.getElementById('newStudentGroupSelect');
-            grpSelect.innerHTML = '<option value="">اختر المجموعة...</option>' + 
-                DATA_CACHE.groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
-
-            const groupsList = document.getElementById('groups-manage-list');
-            groupsList.innerHTML = DATA_CACHE.groups.map((g, i) => `
-                <div class="announce-item" style="padding:10px; display:flex; justify-content:space-between; align-items:center; background:#f8fafc">
-                    <span>${g.name}</span>
-                    <div style="display:flex; gap:10px; align-items:center">
-                        ${i > 0 ? `<i class="fas fa-arrow-up" style="cursor:pointer; color:var(--primary)" onclick="moveGroup(${i}, -1)"></i>` : ''}
-                        ${i < DATA_CACHE.groups.length - 1 ? `<i class="fas fa-arrow-down" style="cursor:pointer; color:var(--primary)" onclick="moveGroup(${i}, 1)"></i>` : ''}
-                        <i class="fas fa-trash" style="color:var(--danger); cursor:pointer; margin-right:10px" onclick="deleteGroup('${g.id}')"></i>
-                    </div>
-                </div>
-            `).join('');
-
-            const cont = document.getElementById('registered-students-list');
-            cont.innerHTML = DATA_CACHE.students.map(s => {
-                const grp = DATA_CACHE.groups.find(g => g.id === s.groupId);
-                return `
-                <div class="announce-item" style="display:flex; justify-content:space-between; align-items:center">
-                    <div>
-                        <b>${s.name}</b>
-                        ${grp ? `<span class="group-badge">${grp.name}</span>` : ''}
-                        <br><small style="color:var(--primary)">${s.code}</small>
-                    </div>
-                    <div class="icon-circle" style="width:35px; height:35px; color:var(--danger); cursor:pointer" onclick='delArrayItem("students", ${JSON.stringify(s)})'><i class="fas fa-trash"></i></div>
-                </div>`;
-            }).join('');
-        }
-
-        window.addGroup = async () => {
-            const name = document.getElementById('newGroupName').value.trim();
-            if(!name) return;
-            const newGroup = { id: Date.now().toString(), name: name };
-            let updatedGroups = [...DATA_CACHE.groups, newGroup];
-            await updateDoc(PATHS.students, { groups: updatedGroups });
-            document.getElementById('newGroupName').value = "";
-        };
-
-        window.moveGroup = async (index, direction) => {
-            let groups = [...DATA_CACHE.groups];
-            if (index + direction < 0 || index + direction >= groups.length) return;
-            [groups[index], groups[index + direction]] = [groups[index + direction], groups[index]];
-            await updateDoc(PATHS.students, { groups: groups });
-        };
-
-        window.deleteGroup = async (id) => {
-            if(!confirm("حذف المجموعة؟")) return;
-            const newGroups = DATA_CACHE.groups.filter(g => g.id !== id);
-            await updateDoc(PATHS.students, { groups: newGroups });
-        };
-
-        window.addStudent = async () => {
-            const name = document.getElementById('newStudentName').value.trim();
-            const code = document.getElementById('newStudentCode').value.trim();
-            const groupId = document.getElementById('newStudentGroupSelect').value;
-            
-            if(name && code) {
-                const studentObj = { name, code, id: Date.now().toString() };
-                if(groupId) studentObj.groupId = groupId;
-                
-                await updateDoc(PATHS.students, { list: arrayUnion(studentObj) });
-                document.getElementById('newStudentName').value = ""; 
-                document.getElementById('newStudentCode').value = "";
-                showCustomAlert("تمت الإضافة بنجاح");
-            }
         };
 
         window.initiateExam = (id, subject) => {
@@ -968,8 +557,7 @@
             const code = document.getElementById('studentExamCode').value.trim();
             const student = DATA_CACHE.students.find(s => s.code === code);
             if(!student) { showCustomAlert("الكود غير صحيح", true); return; }
-            const alreadyDone = DATA_CACHE.results.find(r => r.examId === activeExamData.id && r.studentCode === code);
-            if(alreadyDone) { showCustomAlert("أجريت الاختبار مسبقاً", true); return; }
+            if(DATA_CACHE.results.find(r => r.examId === activeExamData.id && r.studentCode === code)) { showCustomAlert("أجريت الاختبار مسبقاً", true); return; }
             verifiedStudent = student;
             startExam();
         };
@@ -978,13 +566,7 @@
             document.getElementById('current-exam-title').innerText = activeExamData.subject;
             document.getElementById('student-name-display').innerText = "مرحباً: " + verifiedStudent.name;
             const qCont = document.getElementById('questions-container');
-            qCont.innerHTML = activeExamData.questions.map((q, qIdx) => `
-                <div class="box">
-                    <p>س${qIdx+1}: ${q.text} <span style="float:left; background:var(--primary); color:white; padding:2px 8px; border-radius:8px; font-size:0.7rem">${q.points} درجة</span></p>
-                    <div style="margin-top:15px">
-                        ${q.options.map((opt, oIdx) => `<div class="announce-item" style="cursor:pointer" onclick="selectOption(${qIdx}, ${oIdx}, this)">${opt}</div>`).join('')}
-                    </div>
-                </div>`).join('');
+            qCont.innerHTML = activeExamData.questions.map((q, qIdx) => `<div class="box"><p>س${qIdx+1}: ${q.text} <span style="float:left; background:var(--primary); color:white; padding:2px 8px; border-radius:8px; font-size:0.7rem">${q.points} درجة</span></p><div style="margin-top:15px">${q.options.map((opt, oIdx) => `<div class="announce-item" style="cursor:pointer" onclick="selectOption(${qIdx}, ${oIdx}, this)">${opt}</div>`).join('')}</div></div>`).join('');
             changeView('take-exam');
         };
 
@@ -995,33 +577,6 @@
             activeExamData.questions[qIdx].userAnswer = oIdx;
         };
 
-        window.addAnn = async () => {
-            const val = document.getElementById('newAnn').value;
-            if(val) { await updateDoc(PATHS.announces, { list: arrayUnion({ text: val, id: Date.now() }) }); document.getElementById('newAnn').value = ""; }
-        };
-
-        window.addFolder = async () => {
-            const name = document.getElementById('folderName').value.trim();
-            const courseType = document.getElementById('folderCourseType').value;
-            if(!name) return;
-            await updateDoc(PATHS.lectures, { folders: arrayUnion({ name, id: Date.now().toString(), files: [], courseType: parseInt(courseType) }) });
-            document.getElementById('folderName').value = "";
-        };
-
-        window.addFile = async () => {
-            const folderId = document.getElementById('selectFolder').value;
-            const title = document.getElementById('fileTitle').value.trim();
-            const link = document.getElementById('fileLink').value.trim();
-            if(!folderId || !title || !link) return;
-            let updatedFolders = [...DATA_CACHE.lectures];
-            const idx = updatedFolders.findIndex(f => f.id === folderId);
-            if(idx > -1) {
-                updatedFolders[idx].files.push({ title, link, id: Date.now().toString() });
-                await updateDoc(PATHS.lectures, { folders: updatedFolders });
-                document.getElementById('fileTitle').value = ""; document.getElementById('fileLink').value = "";
-            }
-        };
-
         window.submitExam = async () => {
             let totalScore = 0; let maxScore = 0;
             const results = activeExamData.questions.map(q => {
@@ -1030,129 +585,42 @@
                 if(isCorrect) totalScore += q.points;
                 return { q: q.text, userAns: q.options[q.userAnswer] || "لا توجد", correctAns: q.options[q.correct], correct: isCorrect };
             });
-            const entry = { examId: activeExamData.id, studentName: verifiedStudent.name, studentCode: verifiedStudent.code, subject: activeExamData.subject, score: totalScore, maxScore, details: results, createdAt: Date.now() };
-            await updateDoc(PATHS.results, { list: arrayUnion(entry) });
+            await updateDoc(PATHS.results, { list: arrayUnion({ examId: activeExamData.id, studentName: verifiedStudent.name, studentCode: verifiedStudent.code, subject: activeExamData.subject, score: totalScore, maxScore, details: results, createdAt: Date.now() }) });
             showResult(totalScore, maxScore, results);
         };
 
         function showResult(score, max, details) {
             document.getElementById('final-score').innerText = `${score} / ${max}`;
-            document.getElementById('result-details').innerHTML = details.map(d => `
-                <div class="announce-item" style="font-size:0.85rem">
-                    <div style="font-weight:bold; color: #1e293b;">${d.q}</div>
-                    <div style="color:${d.correct ? 'var(--success)' : 'var(--danger)'}">إجابتك: ${d.userAns}</div>
-                    ${!d.correct ? `<div style="color:var(--success)">الصحيحة: ${d.correctAns}</div>` : ''}
-                </div>`).join('');
+            document.getElementById('result-details').innerHTML = details.map(d => `<div class="announce-item" style="font-size:0.85rem"><div style="font-weight:bold; color: #1e293b;">${d.q}</div><div style="color:${d.correct ? 'var(--success)' : 'var(--danger)'}">إجابتك: ${d.userAns}</div>${!d.correct ? `<div style="color:var(--success)">الصحيحة: ${d.correctAns}</div>` : ''}</div>`).join('');
             changeView('result');
         }
 
-        window.openModal = (id) => document.getElementById(id).style.display = 'flex';
         window.closeModal = (id) => document.getElementById(id).style.display = 'none';
-        function showCustomAlert(m, e=false) { document.getElementById('alertMsg').innerText = m; document.getElementById('alertIcon').style.background = e ? 'var(--danger)' : 'var(--primary)'; openModal('alertModal'); }
+        function showCustomAlert(m, e=false) { document.getElementById('alertMsg').innerText = m; document.getElementById('alertIcon').style.background = e ? 'var(--danger)' : 'var(--primary)'; document.getElementById('alertModal').style.display = 'flex'; }
         
         window.openInChrome = (u) => { 
             let downloadUrl = u;
             if (u.includes('drive.google.com')) {
                 const fileId = u.match(/\/d\/([^\/]+)/);
-                if (fileId && fileId[1]) {
-                    downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId[1]}`;
-                }
+                if (fileId && fileId[1]) downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId[1]}`;
             }
             window.location.href = "intent://" + downloadUrl.replace(/^https?:\/\//, "") + "#Intent;scheme=https;package=com.android.chrome;end"; 
         };
-        
         window.openInGDrive = (u) => { window.location.href = "intent://" + u.replace(/^https?:\/\//, "") + "#Intent;scheme=https;package=com.google.android.apps.docs;end"; };
         window.openTelegram = () => window.location.href = "tg://join?invite=VglzL2mnCp5lMWYy";
         
-        window.delArrayItem = (p, item) => {
-            openModal('deleteModal');
-            document.getElementById('confirmDeleteBtn').onclick = async () => {
-                await updateDoc(PATHS[p], { list: arrayRemove(item) });
-                closeModal('deleteModal');
-            };
-        };
-
-        window.delFolder = async (id) => {
-            openModal('deleteModal');
-            document.getElementById('confirmDeleteBtn').onclick = async () => {
-                const updated = DATA_CACHE.lectures.filter(f => f.id !== id);
-                await updateDoc(PATHS.lectures, { folders: updated });
-                closeModal('deleteModal');
-            };
-        };
-
-        window.delFileFromFolder = async (fId, fileId) => {
-            openModal('deleteModal');
-            document.getElementById('confirmDeleteBtn').onclick = async () => {
-                let folders = [...DATA_CACHE.lectures];
-                const idx = folders.findIndex(f => f.id === fId);
-                if(idx > -1) {
-                    folders[idx].files = folders[idx].files.filter(file => file.id !== fileId);
-                    await updateDoc(PATHS.lectures, { folders: folders });
-                }
-                closeModal('deleteModal');
-            };
-        };
-
-        window.addOptionField = () => {
-            const container = document.getElementById('options-area');
-            const count = container.querySelectorAll('input').length + 1;
-            const input = document.createElement('input'); input.type = 'text'; input.className = 'q-opt'; input.placeholder = `خيار ${count}`;
-            container.appendChild(input);
-            const select = document.getElementById('correctOptIndex');
-            const opt = document.createElement('option'); opt.value = count - 1; opt.innerText = `خيار ${count} هو الصحيح`;
-            select.appendChild(opt);
-        };
-
-        window.addToDraft = () => {
-            const text = document.getElementById('qText').value;
-            const points = parseInt(document.getElementById('qPoints').value);
-            const opts = Array.from(document.querySelectorAll('.q-opt')).map(i => i.value).filter(v => v !== "");
-            const correct = parseInt(document.getElementById('correctOptIndex').value);
-            if(!text || isNaN(points) || opts.length < 2) return;
-            currentDraftQuestions.push({ text, options: opts, correct, points });
-            document.getElementById('draft-questions').innerHTML = currentDraftQuestions.map((q, i) => `<div class="announce-item" style="font-size:0.8rem">${i+1}. ${q.text}</div>`).join('');
-            document.getElementById('qText').value = "";
-        };
-
-        window.publishExam = async () => {
-            const subject = document.getElementById('examSubject').value;
-            if(!subject || currentDraftQuestions.length === 0) return;
-            await updateDoc(PATHS.exams, { list: arrayUnion({ subject, questions: currentDraftQuestions, id: Date.now().toString(), createdAt: Date.now() }) });
-            currentDraftQuestions = []; changeView('admin');
-        };
-
-        window.viewResults = (examId) => {
-            const cont = document.getElementById('exam-results-container');
-            const filtered = DATA_CACHE.results.filter(r => r.examId === examId);
-            cont.innerHTML = filtered.length === 0 ? "<p>لا توجد نتائج</p>" : 
-                filtered.map(r => `<div class="announce-item" style="display:flex; justify-content:space-between"><div><b>${r.studentName}</b><br><small>الدرجة: ${r.score} / ${r.maxScore}</small></div></div>`).join('');
-            changeView('results-list');
-        };
-
-        // دالة تبديل الثيم وحفظ الحالة
         window.toggleTheme = () => {
-            const body = document.body;
-            const btn = document.getElementById('themeBtn');
-            const isDark = body.classList.toggle('dark-mode');
-            
-            btn.innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+            const isDark = document.body.classList.toggle('dark-mode');
+            document.getElementById('themeBtn').innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         };
 
-        // تحميل الثيم عند فتح التطبيق - معدل ليكون دائماً غامق في البداية
         window.onload = () => {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') {
+            if (localStorage.getItem('theme') === 'light') {
                 document.body.classList.remove('dark-mode');
                 document.getElementById('themeBtn').innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                // الوضع الافتراضي أو المختار سابقاً غامق
-                document.body.classList.add('dark-mode');
-                document.getElementById('themeBtn').innerHTML = '<i class="fas fa-moon"></i>';
             }
         };
-
     </script>
 </body>
 </html>
