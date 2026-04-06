@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>جامعة العلوم العراقية - النسخة الاحترافية</title>
+    <title>جامعة العلوم العراقية - المكتبة الرقمية</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
@@ -112,33 +112,6 @@
 
         .container { padding: 20px; max-width: 600px; margin: auto; }
 
-        .announce-item {
-            background: #ffffff;
-            border-right: 4px solid var(--primary);
-            padding: 15px; border-radius: 16px; margin-bottom: 15px;
-            border: 1px solid var(--glass-border);
-            animation: slideIn 0.4s ease-out;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-        }
-
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .card {
-            background: #ffffff; border: 1px solid var(--glass-border);
-            padding: 20px 10px; border-radius: 28px; text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative; overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-        }
-        .card:active { transform: scale(0.95); background: #f8fafc; }
-        .card i { font-size: 1.6rem; margin-bottom: 10px; display: block; }
-        .card span { font-weight: 600; font-size: 0.9rem; color: #475569; }
-
-        .icon-circle {
-            width: 50px; height: 50px; margin: 0 auto 12px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            background: #f1f5f9; border: 1px solid var(--glass-border);
-        }
-
         .tabs-container {
             display: flex;
             background: #e2e8f0;
@@ -212,79 +185,28 @@
             transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         body.dark-mode .telegram-float-btn { border-color: #0a0a0a; }
-        .telegram-float-btn:active { transform: translateX(-50%) scale(0.9); }
-
-        .box { background: #ffffff; border: 1px solid var(--glass-border); border-radius: 24px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
-        input, select { 
-            width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; 
-            background: #f8fafc; color: #1e293b; margin-bottom: 12px; font-family: 'Tajawal';
-        }
-        .btn {
-            background: var(--primary); color: white; border: none; padding: 16px; border-radius: 16px; 
-            width: 100%; font-weight: 800; cursor: pointer; box-shadow: var(--glow);
-        }
 
         .view { display: none; }
         .active-view { display: block; animation: fadeIn 0.3s ease; }
-
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-        
-        .c-1 { color: #6366f1; } .c-2 { color: #f59e0b; } .c-3 { color: #10b981; } .c-4 { color: #0ea5e9; }
-        
+
+        .announce-item {
+            background: #ffffff; border: 1px solid var(--glass-border);
+            padding: 15px; border-radius: 16px; margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+
         .file-btn {
             width: 35px; height: 35px; border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
             background: #f1f5f9; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.2s; color: #1e293b;
         }
         body.dark-mode .file-btn { background: #262626; border-color: #333; color: white; }
-        .file-btn:active { transform: scale(0.9); }
-        .view-btn { color: var(--primary); } .download-btn { color: var(--success); }
-
-        .group-header {
-            background: #e0e7ff; color: var(--primary); padding: 10px 15px;
-            border-radius: 12px; font-weight: bold; margin-bottom: 10px; margin-top: 20px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        body.dark-mode .group-header { background: #1e1e1e; color: #818cf8; }
-
-        .schedule-img {
-            width: 100%; border-radius: 15px; margin-top: 10px; cursor: pointer;
-            border: 1px solid var(--glass-border); transition: 0.3s;
-        }
-        .schedule-img:hover { transform: scale(1.02); }
-
-        #fullImageModal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.9); 
-            display: none; justify-content: center; align-items: center; 
-            z-index: 6000; padding: 20px;
-        }
-        #fullImageModal img {
-            max-width: 100%; max-height: 90vh; border-radius: 10px; 
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
-        }
-        #fullImageModal .close-img {
-            position: absolute; top: 20px; right: 20px; color: white; 
-            font-size: 2rem; cursor: pointer;
-        }
     </style>
 </head>
 <body class="dark-mode"> 
     <div class="telegram-float-btn" onclick="openTelegram()">
         <i class="fab fa-telegram-plane"></i>
-    </div>
-
-    <div id="fullImageModal" onclick="closeImageFull()">
-        <span class="close-img">×</span>
-        <img id="imgViewer" src="" alt="جدول" onclick="event.stopPropagation()">
-    </div>
-
-    <div id="alertModal" class="modal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 4000;">
-        <div class="modal-cont" style="background: #ffffff; border: 1px solid var(--primary); padding: 30px; border-radius: 30px; width: 85%; max-width: 350px; text-align: center;">
-            <div id="alertIcon" class="logo-placeholder" style="margin: 0 auto 15px; color: white; background: var(--primary);"><i class="fas fa-exclamation"></i></div>
-            <h4 id="alertMsg" style="color: #1e293b;">تنبيه</h4>
-            <button class="btn" onclick="closeModal('alertModal')">حسناً</button>
-        </div>
     </div>
 
     <header>
@@ -303,37 +225,9 @@
     </header>
 
     <div class="container">
-        <div id="main-view" class="view active-view">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h3 style="margin:0"><i class="fas fa-bullhorn" style="color:var(--primary)"></i> آخر التبليغات</h3>
-                <span style="font-size: 0.7rem; opacity: 0.6;" id="current-date"></span>
-            </div>
-            <div id="ann-list"></div>
-            
-            <h3 style="margin-top:30px; margin-bottom: 15px;">الأقسام الذكية</h3>
-            <div class="grid">
-                <div class="card" onclick="changeView('lectures')">
-                    <div class="icon-circle"><i class="fas fa-book-open c-1"></i></div>
-                    <span>المكتبة الرقمية</span>
-                </div>
-                <div class="card" onclick="changeView('students')">
-                    <div class="icon-circle"><i class="fas fa-user-graduate c-2"></i></div>
-                    <span>دليل الطلاب</span>
-                </div>
-                <div class="card" onclick="changeView('schedules')">
-                    <div class="icon-circle"><i class="fas fa-calendar-alt c-4"></i></div>
-                    <span>جدول المحاضرات</span>
-                </div>
-                <div class="card" onclick="changeView('exams-list')">
-                    <div class="icon-circle"><i class="fas fa-file-invoice c-3"></i></div>
-                    <span>مركز الاختبارات</span>
-                </div>
-            </div>
-        </div>
-
-        <div id="lectures-view" class="view">
+        <div id="lectures-view" class="view active-view">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-                <h3 onclick="changeView('main')" style="cursor:pointer; margin:0"><i class="fas fa-arrow-right"></i> المكتبة الرقمية</h3>
+                <h3 style="margin:0"><i class="fas fa-book-open"></i> المكتبة الرقمية</h3>
             </div>
             <div class="tabs-container">
                 <button class="tab-btn" id="btn-course1" onclick="switchCourse(1)">الكورس الأول</button>
@@ -346,61 +240,16 @@
             <h3 onclick="changeView('lectures')" style="cursor:pointer"><i class="fas fa-arrow-right"></i> <span id="current-folder-title">المجلد</span></h3>
             <div id="files-list"></div>
         </div>
-
-        <div id="schedules-view" class="view">
-            <h3 onclick="changeView('main')" style="cursor:pointer"><i class="fas fa-arrow-right"></i> جدول المحاضرات</h3>
-            <div id="schedules-list"></div>
-        </div>
-
-        <div id="exams-list-view" class="view">
-            <h3 onclick="changeView('main')" style="cursor:pointer"><i class="fas fa-arrow-right"></i> الامتحانات المتاحة</h3>
-            <div id="student-exams-container"></div>
-        </div>
-
-        <div id="exam-auth-view" class="view">
-            <div class="box">
-                <h3 id="auth-exam-title">التحقق من الكود</h3>
-                <input type="text" id="studentExamCode" placeholder="أدخل كود الطالب الخاص بك">
-                <button class="btn" onclick="checkExamAccess()">دخول الامتحان</button>
-            </div>
-        </div>
-
-        <div id="take-exam-view" class="view">
-            <div class="box" style="border-right: 4px solid var(--primary);">
-                <h3 id="current-exam-title" style="margin:0">..</h3>
-                <p id="student-name-display" style="color:var(--primary); font-size: 0.9rem; margin-top:5px;"></p>
-            </div>
-            <div id="questions-container"></div>
-            <button class="btn" onclick="submitExam()">إنهاء وإرسال الإجابات</button>
-        </div>
-
-        <div id="result-view" class="view">
-            <div class="box" style="text-align: center;">
-                <h2 style="color: var(--primary)">النتيجة النهائية</h2>
-                <div id="final-score" style="font-size: 4rem; font-weight: 900; color: var(--primary);">0</div>
-                <div id="result-details"></div>
-                <button class="btn" style="margin-top: 20px;" onclick="changeView('main')">العودة للرئيسية</button>
-            </div>
-        </div>
-
-        <div id="students-view" class="view">
-            <h3 onclick="changeView('main')" style="cursor:pointer"><i class="fas fa-arrow-right"></i> دليل الطلاب</h3>
-            <input type="text" id="nameSearch" placeholder="ابحث عن اسم زميل..." onkeyup="renderStudentsView()" style="border-radius:50px; background: #ffffff; border: 1px solid var(--glass-border);">
-            <div id="names-list"></div>
-        </div>
     </div>
 
     <nav class="nav-bar">
-        <div class="nav-link active" onclick="changeView('main', this)"><i class="fas fa-home"></i></div>
-        <div class="nav-link" onclick="changeView('lectures', this)"><i class="fas fa-folder-open"></i></div>
-        <div style="width: 60px;"></div> 
-        <div class="nav-link" onclick="changeView('students', this)"><i class="fas fa-users"></i></div>
+        <div class="nav-link active" onclick="changeView('lectures', this)"><i class="fas fa-home"></i></div>
         <div class="nav-link" onclick="openTelegram()"><i class="fab fa-telegram-plane"></i></div>
     </nav>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, getDoc, updateDoc, onSnapshot, arrayUnion, arrayRemove, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBqShbg9U3R2Qk09Md_LT7_ZuWITVJZw80",
@@ -415,38 +264,16 @@
         const db = getFirestore(app);
 
         const PATHS = {
-            announces: doc(db, "announces", "dqs4iwnG43y1KLxE0xBx"),
-            students: doc(db, "students_db", "6rvksrEUBJ3wq3QyJ9ck"),
-            exams: doc(db, "exams", "A3usDq20nSyKAKeDkVnH"),
-            lectures: doc(db, "lectures", "9wQArJoxCuzuja4uF4BX"),
-            results: doc(db, "results", "global_results"),
-            schedules: doc(db, "schedules", "main_data") 
+            lectures: doc(db, "lectures", "9wQArJoxCuzuja4uF4BX")
         };
 
-        let DATA_CACHE = {
-            announces: [], students: [], groups: [], exams: [], lectures: [], results: [], schedules: [] 
-        };
-
-        let activeExamData = null;
-        let verifiedStudent = null;
+        let DATA_CACHE = { lectures: [] };
         let currentCourseTab = 2; 
 
-        document.getElementById('current-date').innerText = new Date().toLocaleDateString('ar-EG', { weekday: 'long', month: 'long', day: 'numeric' });
-
         function initRealtimeSync() {
-            onSnapshot(PATHS.announces, (s) => { DATA_CACHE.announces = s.data()?.list || []; renderAnnounces(); });
-            onSnapshot(PATHS.lectures, (s) => { DATA_CACHE.lectures = s.data()?.folders || []; renderFolders(); });
-            onSnapshot(PATHS.students, (s) => { 
-                const data = s.data();
-                DATA_CACHE.students = data?.list || []; 
-                DATA_CACHE.groups = data?.groups || []; 
-                if(document.getElementById('students-view').classList.contains('active-view')) renderStudentsView();
-            });
-            onSnapshot(PATHS.exams, (s) => { DATA_CACHE.exams = s.data()?.list || []; renderExams(); });
-            onSnapshot(PATHS.results, (s) => { DATA_CACHE.results = s.data()?.list || []; });
-            onSnapshot(PATHS.schedules, (s) => { 
-                DATA_CACHE.schedules = s.data()?.list || []; 
-                renderSchedules(); 
+            onSnapshot(PATHS.lectures, (s) => { 
+                DATA_CACHE.lectures = s.data()?.folders || []; 
+                renderFolders(); 
             });
         }
         initRealtimeSync();
@@ -467,22 +294,8 @@
                 el.classList.add('active');
             }
             if(vName === 'lectures') renderFolders();
-            if(vName === 'exams-list') renderExams();
-            if(vName === 'students') renderStudentsView();
-            if(vName === 'schedules') renderSchedules();
-            if (vName !== 'main') history.pushState({view: vName}, '', '#' + vName);
             window.scrollTo({top: 0, behavior: 'smooth'});
         };
-
-        window.onpopstate = function(event) {
-            if (event.state && event.state.view) changeView(event.state.view, null);
-            else changeView('main', document.querySelector('.nav-link:first-child'));
-        };
-
-        function renderAnnounces() {
-            const list = document.getElementById('ann-list');
-            list.innerHTML = DATA_CACHE.announces.slice(-5).reverse().map(a => `<div class="announce-item"><i class="fas fa-info-circle" style="color:var(--primary); margin-left:8px"></i>${a.text}</div>`).join('');
-        }
 
         function renderFolders() {
             const cont = document.getElementById('folders-container');
@@ -494,110 +307,16 @@
             cont.innerHTML = filteredFolders.map(f => `<div class="folder-card" onclick="openFolder('${f.id}')"><i class="fas fa-folder"></i><span class="folder-name">${f.name}</span><span class="file-count">${f.files.length} ملفات</span></div>`).join('');
         }
 
-        function renderExams() {
-            const cont = document.getElementById('student-exams-container');
-            cont.innerHTML = DATA_CACHE.exams.map(e => `<div class="box"><h4 style="margin:0">${e.subject}</h4><p style="font-size:0.8rem; opacity:0.6">يتكون من ${e.questions.length} أسئلة</p><button class="btn" onclick="initiateExam('${e.id}', '${e.subject}')">بدء الاختبار</button></div>`).join('');
-        }
-
-        function renderSchedules() {
-            const cont = document.getElementById('schedules-list');
-            if(DATA_CACHE.schedules.length === 0) {
-                cont.innerHTML = "<p style='text-align:center; opacity:0.5'>لا توجد جداول منشورة حالياً</p>";
-                return;
-            }
-            cont.innerHTML = DATA_CACHE.schedules.map(s => `<div class="box"><h4 style="margin-top:0">${s.title}</h4><img src="${s.img}" class="schedule-img" onclick="openImageFull('${s.img}')"><p style="font-size:0.7rem; opacity:0.5; margin-top:10px">اضغط على الصورة للتكبير</p></div>`).join('');
-        }
-
-        window.openImageFull = (src) => {
-            const modal = document.getElementById('fullImageModal');
-            document.getElementById('imgViewer').src = src;
-            modal.style.display = 'flex';
-        };
-        window.closeImageFull = () => document.getElementById('fullImageModal').style.display = 'none';
-
-        window.renderStudentsView = () => {
-            const term = document.getElementById('nameSearch').value.toLowerCase().trim();
-            const cont = document.getElementById('names-list');
-            if (term) {
-                const filtered = DATA_CACHE.students.filter(s => s.name.toLowerCase().includes(term));
-                cont.innerHTML = filtered.length ? filtered.map(s => {
-                    const grp = DATA_CACHE.groups.find(g => g.id === s.groupId);
-                    return `<div class="announce-item"><div><span>${s.name}</span>${grp ? `<span class="group-badge" style="margin-right:10px; font-size:0.7rem; color:var(--primary)">(${grp.name})</span>` : ''}</div></div>`;
-                }).join('') : '<p style="text-align:center; opacity:0.5">لا توجد نتائج</p>';
-            } else {
-                let html = '';
-                DATA_CACHE.groups.forEach(group => {
-                    const studentsInGroup = DATA_CACHE.students.filter(s => s.groupId === group.id);
-                    if(studentsInGroup.length > 0) {
-                        html += `<div class="group-header"><span>${group.name}</span></div>`;
-                        html += studentsInGroup.map(s => `<div class="announce-item" style="margin-right:10px; border-right:2px solid var(--primary);"><span>${s.name}</span></div>`).join('');
-                    }
-                });
-                cont.innerHTML = html || '<p style="text-align:center; opacity:0.5">القائمة فارغة</p>';
-            }
-        };
-
         window.openFolder = (folderId) => {
             const folder = DATA_CACHE.lectures.find(f => f.id === folderId);
             if(!folder) return;
             document.getElementById('current-folder-title').innerText = folder.name;
             const list = document.getElementById('files-list');
             list.innerHTML = folder.files.length === 0 ? "<p style='text-align:center; opacity:0.5; margin-top:30px;'>فارغ</p>" :
-                folder.files.map(f => `<div class="announce-item" style="display:flex; justify-content:space-between; align-items:center"><div style="display:flex; align-items:center; gap:10px"><i class="fas fa-file-pdf" style="color:#ff4757; font-size:1.5rem"></i><span>${f.title}</span></div><div style="display:flex; gap:8px"><div class="file-btn view-btn" onclick="openInGDrive('${f.link}')"><i class="fas fa-eye"></i></div><div class="file-btn download-btn" onclick="openInChrome('${f.link}')"><i class="fas fa-download"></i></div></div></div>`).join('');
+                folder.files.map(f => `<div class="announce-item" style="display:flex; justify-content:space-between; align-items:center"><div style="display:flex; align-items:center; gap:10px"><i class="fas fa-file-pdf" style="color:#ff4757; font-size:1.5rem"></i><span>${f.title}</span></div><div style="display:flex; gap:8px"><div class="file-btn" style="color:var(--primary)" onclick="openInGDrive('${f.link}')"><i class="fas fa-eye"></i></div><div class="file-btn" style="color:var(--success)" onclick="openInChrome('${f.link}')"><i class="fas fa-download"></i></div></div></div>`).join('');
             changeView('folder-content');
         };
 
-        window.initiateExam = (id, subject) => {
-            activeExamData = DATA_CACHE.exams.find(e => e.id === id);
-            document.getElementById('auth-exam-title').innerText = "اختبار " + subject;
-            changeView('exam-auth');
-        };
-
-        window.checkExamAccess = () => {
-            const code = document.getElementById('studentExamCode').value.trim();
-            const student = DATA_CACHE.students.find(s => s.code === code);
-            if(!student) { showCustomAlert("الكود غير صحيح", true); return; }
-            if(DATA_CACHE.results.find(r => r.examId === activeExamData.id && r.studentCode === code)) { showCustomAlert("أجريت الاختبار مسبقاً", true); return; }
-            verifiedStudent = student;
-            startExam();
-        };
-
-        window.startExam = () => {
-            document.getElementById('current-exam-title').innerText = activeExamData.subject;
-            document.getElementById('student-name-display').innerText = "مرحباً: " + verifiedStudent.name;
-            const qCont = document.getElementById('questions-container');
-            qCont.innerHTML = activeExamData.questions.map((q, qIdx) => `<div class="box"><p>س${qIdx+1}: ${q.text} <span style="float:left; background:var(--primary); color:white; padding:2px 8px; border-radius:8px; font-size:0.7rem">${q.points} درجة</span></p><div style="margin-top:15px">${q.options.map((opt, oIdx) => `<div class="announce-item" style="cursor:pointer" onclick="selectOption(${qIdx}, ${oIdx}, this)">${opt}</div>`).join('')}</div></div>`).join('');
-            changeView('take-exam');
-        };
-
-        window.selectOption = (qIdx, oIdx, el) => {
-            el.parentElement.querySelectorAll('.announce-item').forEach(i => { i.style.borderColor = 'var(--glass-border)'; i.style.background = '#ffffff'; });
-            el.style.borderColor = 'var(--primary)';
-            el.style.background = 'rgba(99, 102, 241, 0.05)';
-            activeExamData.questions[qIdx].userAnswer = oIdx;
-        };
-
-        window.submitExam = async () => {
-            let totalScore = 0; let maxScore = 0;
-            const results = activeExamData.questions.map(q => {
-                maxScore += q.points;
-                const isCorrect = q.userAnswer === q.correct;
-                if(isCorrect) totalScore += q.points;
-                return { q: q.text, userAns: q.options[q.userAnswer] || "لا توجد", correctAns: q.options[q.correct], correct: isCorrect };
-            });
-            await updateDoc(PATHS.results, { list: arrayUnion({ examId: activeExamData.id, studentName: verifiedStudent.name, studentCode: verifiedStudent.code, subject: activeExamData.subject, score: totalScore, maxScore, details: results, createdAt: Date.now() }) });
-            showResult(totalScore, maxScore, results);
-        };
-
-        function showResult(score, max, details) {
-            document.getElementById('final-score').innerText = `${score} / ${max}`;
-            document.getElementById('result-details').innerHTML = details.map(d => `<div class="announce-item" style="font-size:0.85rem"><div style="font-weight:bold; color: #1e293b;">${d.q}</div><div style="color:${d.correct ? 'var(--success)' : 'var(--danger)'}">إجابتك: ${d.userAns}</div>${!d.correct ? `<div style="color:var(--success)">الصحيحة: ${d.correctAns}</div>` : ''}</div>`).join('');
-            changeView('result');
-        }
-
-        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
-        function showCustomAlert(m, e=false) { document.getElementById('alertMsg').innerText = m; document.getElementById('alertIcon').style.background = e ? 'var(--danger)' : 'var(--primary)'; document.getElementById('alertModal').style.display = 'flex'; }
-        
         window.openInChrome = (u) => { 
             let downloadUrl = u;
             if (u.includes('drive.google.com')) {
